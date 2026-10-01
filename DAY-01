@@ -1,0 +1,1774 @@
+Phase 1 — JavaScript Foundations
+Day: 1 of 30
+Level: Complete Beginner → Interview Foundation
+Main Goal: Understand what JavaScript is, how it runs, and write the first JavaScript programs independently.
+
+1. DAY 1 LEARNING GOALS
+Explain what JavaScript is.
+Explain why JavaScript is needed.
+Clearly differentiate HTML, CSS and JavaScript.
+Explain the role of JavaScript in frontend development.
+Explain, at a basic level, how JavaScript runs inside a browser.
+Identify common JavaScript engines.
+Run JavaScript in the browser console.
+Run JavaScript using an HTML file and an external .js file.
+Understand basic JavaScript syntax.
+Understand statements and semicolons.
+Write single-line and multi-line comments.
+Use console.log().
+Understand the difference between text and expressions.
+Understand the basic idea of storing a value in a variable.
+Read a small JavaScript program line by line.
+Predict simple program output.
+Identify basic syntax, runtime and logical errors.
+Explain basic JavaScript concepts in interview language.
+
+
+2. FIRST UNDERSTAND THE BIG PICTURE
+
+Before writing JavaScript code, understand where JavaScript fits.
+A website can be thought of as having three major responsibilities:
+HTML → STRUCTURE
+HTML answers:
+"What is present on the webpage?"
+Example:
+<h1>Welcome</h1>
+<button>Login</button>
+<p>Hello</p>
+HTML creates the elements.
+
+CSS → APPEARANCE
+CSS answers:
+"How should those elements look?"
+Example:
+button {
+    background: blue;
+    color: white;
+}
+CSS controls appearance and presentation.
+
+
+JavaScript → BEHAVIOUR
+JavaScript answers:
+"What should happen?"
+For example:
+What happens when I click a button?
+What happens when I type into a form?
+What happens when I submit a form?
+How should the page react?
+How can I get data from a server?
+How can I change something on the page?
+
+Example:
+console.log("Button clicked");
+Later:
+button.addEventListener("click", login);
+
+3. EASY WAY TO REMEMBER HTML, CSS AND JAVASCRIPT
+Think about a house.
+HTML
+HTML is the structure of the house.
+Walls, doors, windows, rooms.
+
+CSS
+CSS is the appearance.
+Paint, colours, size, design.
+
+JavaScript
+JavaScript is the behaviour.
+Door opens.
+Lights turn on.
+Button performs an action.
+Therefore:
+HTML       → Structure
+CSS        → Style
+JavaScript → Behaviour
+
+Interview Answer
+If the interviewer asks:
+"What is the difference between HTML, CSS and JavaScript?"
+Answer:
+HTML defines the structure and content of a webpage. CSS controls its presentation and appearance. JavaScript controls behaviour and makes the webpage interactive.
+
+4. WHAT IS JAVASCRIPT?
+Simple Explanation
+JavaScript is a programming language used to make webpages interactive and dynamic.
+For example:
+Without JavaScript:
+Click Login
+       ↓
+Nothing happens
+With JavaScript:
+Click Login
+       ↓
+JavaScript executes
+       ↓
+Validate username/password
+       ↓
+Show result
+
+5. WHY WAS JAVASCRIPT CREATED?
+HTML can create content.
+CSS can style content.
+But websites also need to respond to users.
+For example:
+clicking
+typing
+scrolling
+submitting forms
+selecting options
+
+JavaScript provides this behaviour.
+The uploaded source describes JavaScript as a dynamically typed language used in browsers and notes that it can also run on servers through Node.js.
+
+6. WHERE IS JAVASCRIPT USED?
+JavaScript is used for:
+1. Button interactions
+button.addEventListener("click", ...)
+2. Form validation
+Checking whether:
+Email is valid
+Password is entered
+Required fields are filled
+3. Changing webpage content
+JavaScript can modify the webpage after it loads.
+4. Fetching data
+JavaScript can communicate with servers and display data.
+5. Browser storage
+For example:
+localStorage
+6. Frontend frameworks
+JavaScript powers technologies such as:
+React
+Vue
+Angular
+
+7. Backend development
+JavaScript can also run outside the browser using:
+Node.js
+
+7. JAVASCRIPT IS NOT JAVA
+This is a common beginner confusion.
+Java
+A separate programming language.
+JavaScript
+A separate programming language.
+They are not the same language.
+
+
+Interview Question
+Is JavaScript related to Java?
+Answer:
+No. JavaScript and Java are different programming languages. The similarity is mainly in the name; they have different language designs, runtimes and use cases.
+
+8. WHAT IS ECMASCRIPT?
+
+1. What is ECMAScript?
+ECMAScript is the standard or set of rules that defines how the JavaScript language should work.
+In simple words:
+ECMAScript = Rules/standard for JavaScript
+JavaScript follows the ECMAScript standard.
+
+2. Why Do We Need ECMAScript?
+Imagine different browsers followed completely different rules for JavaScript.
+For example:
+Chrome → JavaScript works one way
+Firefox → JavaScript works another way
+Safari → JavaScript works differently
+
+This would make it difficult for developers to create websites that work consistently.
+So, a common standard was created.
+
+
+
+
+That standard is called:
+ECMAScript
+It provides common rules for JavaScript.
+
+3. ECMAScript vs JavaScript
+This is the most important thing to understand.
+ECMAScript
+    ↓
+Standard / Specification
+    ↓
+Defines rules and features
+
+
+JavaScript
+    ↓
+Programming language
+    ↓
+Follows the ECMAScript standard
+Simple Example
+Think about a game.
+Game Rules → ECMAScript
+
+Playing the Game → JavaScript
+The rules tell us how the game should work.
+Similarly, ECMAScript defines how JavaScript should work.
+
+4. Is ECMAScript the Same as JavaScript?
+No.
+They are related, but they are not exactly the same thing.
+ECMAScript
+ECMAScript is the standard/specification.
+JavaScript
+JavaScript is a programming language that implements the ECMAScript standard.
+Remember:
+ECMAScript = Standard
+
+JavaScript = Language
+
+5. What Does "ES" Mean?
+You will often see terms such as:
+ES5
+ES6
+ES2016
+ES2017
+ES2020
+ES2021
+ES means ECMAScript.
+For example:
+ES6
+means:
+ECMAScript 6
+
+6. What is ES6?
+ES6 is an important version of ECMAScript.
+It was officially released in 2015.
+Therefore, ES6 is also called:
+ECMAScript 2015
+ES6 introduced many important features to JavaScript.
+For example:
+let name = "John";
+const age = 20;
+The let and const keywords were introduced with ES6.
+We will learn these features in detail later.
+
+7. Why Should a JavaScript Developer Know ECMAScript?
+You don't need to memorize every ECMAScript version.
+But you should understand the basic idea because you will hear terms such as:
+ES6
+ES2015
+ES2020
+ES2021
+during JavaScript learning and interviews.
+For example, an interviewer may ask:
+"What is ES6?"
+You should know that it refers to an important version of the ECMAScript standard.
+
+8. Simple Real-Life Analogy
+Imagine a school.
+The school has rules:
+School Rules
+    ↓
+How students should behave
+Students follow those rules.
+Similarly:
+ECMAScript
+    ↓
+Rules for JavaScript
+    ↓
+JavaScript follows those rules
+So remember:
+ECMAScript defines the standard.
+JavaScript follows the standard.
+
+10. Interview Questions
+Question 1
+What is ECMAScript?
+Answer
+ECMAScript is a standard or specification that defines the rules and features of the JavaScript language.
+
+Question 2
+Is ECMAScript the same as JavaScript?
+Answer
+No.
+ECMAScript is the standard/specification, while JavaScript is a programming language that follows and implements that standard.
+
+Question 3
+What does ES stand for?
+Answer
+ES stands for ECMAScript.
+
+Question 4
+What is ES6?
+Answer
+ES6 is the sixth edition of the ECMAScript standard. It was standardized in 2015 and is also called ECMAScript 2015.
+
+
+
+Question 5
+Why is ES6 important?
+Answer
+ES6 introduced many important features to JavaScript, including let and const, along with several other modern language features.
+
+11. Quick Understanding Check
+Ask the learner:
+Q1. ECMAScript is:
+A. A browser
+B. A JavaScript engine
+C. A standard/specification
+D. An operating system
+Answer: C
+
+Q2. ES stands for:
+A. Easy Script
+B. ECMAScript
+C. Execute Script
+D. External Script
+Answer: B
+
+Q3. ES6 is also called:
+A. ECMAScript 2015
+B. ECMAScript 2020
+C. JavaScript 6
+D. Browser 6
+Answer: A
+
+Q4. Which statement is correct?
+A. ECMAScript is a browser.
+B. JavaScript is a browser.
+C. ECMAScript defines standards for JavaScript.
+D. JavaScript and ECMAScript are completely unrelated.
+Answer: C
+
+12. One-Minute Revision
+Remember these four points:
+1. ECMAScript = Standard/specification
+
+2. JavaScript = Programming language that follows the standard/rules from ES
+
+3. ES = ECMAScript
+
+4. ES6 = ECMAScript 2015
+Final Memory Trick
+ECMAScript → RULEBOOK
+
+JavaScript → LANGUAGE
+
+ES6 → VERSION OF THE RULEBOOK
+
+
+
+
+
+
+
+
+
+
+
+
+9. HTML, CSS AND JAVASCRIPT — INTERVIEW COMPARISON
+Technology	Purpose	Example
+HTML	Structure	Button, heading, paragraph
+CSS	Appearance	Colour, size, layout
+JavaScript	Behaviour	Click, validation, interaction
+
+
+Important Interview Question
+Is HTML a programming language?
+Answer:
+No. HTML is a markup language used to structure webpage content. JavaScript is a programming language because it supports concepts such as variables, conditions, loops and functions.
+
+10. HOW DOES JAVASCRIPT RUN?
+This is one of the most important Day 1 concepts.
+Suppose the browser receives:
+<script>
+console.log("Hello");
+</script>
+The high-level process is:
+Browser
+   ↓
+Finds JavaScript code ? 
+   ↓
+JavaScript Engine
+   ↓
+Parse the code (understand code)
+   ↓
+Execute the code
+   ↓
+Output / Behaviour
+
+11. WHAT IS A JAVASCRIPT ENGINE?
+A JavaScript engine is software that reads and executes JavaScript code.
+Different browsers use different engines.
+Important engines
+Engine	Used by
+V8	Chrome, Edge, Node.js
+SpiderMonkey	Firefox
+JavaScriptCore	Safari
+The uploaded material specifically identifies these three engines and their environments.
+
+12. WHAT HAPPENS BEFORE JAVASCRIPT EXECUTES?
+At a simplified level:
+Step 1 — Browser receives the page
+HTML downloaded
+Step 2 — Browser encounters JavaScript
+For example:
+<script src="app.js"></script>
+Step 3 — JavaScript engine receives the code
+Step 4 — Engine parses the code
+It checks whether the code follows valid syntax.
+Step 5 — Engine executes the code
+The statements execute in execution order.
+
+13. PARSE VS EXECUTE
+These two words are important for interviews.
+Parse => understand the code
+The engine examines(read) the code and understands its structure.
+Example:
+console.log("Hello");
+
+Execute => execute the code
+The engine actually performs the instruction.
+console.log("Hello");
+causes:
+Hello
+to appear in the console.
+
+14. IMPORTANT EXECUTION RULE
+For the beginner model:
+JavaScript statements execute in order, from top to bottom.
+Example:
+console.log("second");
+console.log("third");
+console.log("first");
+
+Output:
+Second
+third
+first
+Therefore, when solving output questions:
+ALWAYS TRACE IN EXECUTION ORDER.
+
+
+
+
+
+15. SYNTAX ERROR VS RUNTIME ERROR
+This distinction is extremely important for interviews.
+
+What is syntax?
+Syntax = rules for writing JavaScript code correctly.
+
+What  is Syntax Error ?
+A syntax error means the code is written in a way that JavaScript cannot properly understand.
+Example:
+console.log("Hello);
+The string is not properly closed.
+The engine cannot correctly parse(understand) the code.
+
+Runtime Error
+The code starts executing, but an error occurs while it is running.
+Example:
+console.log("Start");
+
+console.log(Hello);
+
+console.log("End");
+If Hello has not been declared, execution reaches that line and fails.
+Therefore:
+Start
+ReferenceError
+End does not execute.
+
+16. EASY WAY TO REMEMBER THE DIFFERENCE
+Syntax Error
+Can the engine understand the code?
+             ↓
+          NO
+             ↓
+       Syntax Error
+Runtime Error
+Code can be understood
+          ↓
+Code starts running
+          ↓
+Problem occurs during execution
+          ↓
+Runtime Error
+
+
+
+
+Syntax Error	Runtime Error
+Problem with code structure	Problem while running
+JavaScript cannot properly understand the code	JavaScript starts running but encounters a problem
+Happens during code parsing	Happens during execution
+
+Syntax Error
+    ↓
+"Your sentence is written incorrectly."
+
+Runtime Error
+    ↓
+"Your sentence is understandable,
+but something goes wrong when you try to perform it."
+
+17. SETTING UP JAVASCRIPT
+There are three useful ways to run JavaScript on Day 1.
+
+METHOD 1 — BROWSER CONSOLE
+Open Chrome.
+Right Click
+     ↓
+Inspect
+     ↓
+Console
+Then type:
+console.log("Hello JavaScript");
+Press Enter.
+Output:
+Hello JavaScript
+This is the fastest way to experiment.
+
+18. METHOD 2 — INLINE JAVASCRIPT
+Create an HTML file:
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Page</h1>
+
+<script>
+    console.log("Hello from JavaScript");
+</script>
+
+</body>
+</html>
+The JavaScript is directly inside:
+<script>
+</script>
+
+19. METHOD 3 — EXTERNAL JAVASCRIPT
+This is the approach to become comfortable with as a developer.
+index.html
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Page</h1>
+
+<script src="app.js"></script>
+
+</body>
+</html>
+app.js
+console.log("Hello from app.js");
+Relationship:
+index.html
+     ↓
+<script src="app.js">
+     ↓
+app.js
+     ↓
+JavaScript executes
+
+20. WHY USE AN EXTERNAL JS FILE?
+Instead of putting hundreds of lines inside HTML:
+<script>
+    // lots of JavaScript
+</script>
+we can keep JavaScript separately:
+index.html
+app.js
+Benefits:
+cleaner HTML
+easier maintenance
+easier debugging
+reusable code
+professional project structure
+
+21. WHERE SHOULD THE SCRIPT TAG GO?
+For this course's basic approach:
+<body>
+
+    ...
+
+    <script src="app.js"></script>
+</body>
+Putting it near the end of the body ensures the HTML elements have already been parsed before the script tries to use them.
+Later, the course will also cover:
+<script defer>
+The uploaded source explicitly identifies placing the script at the end of <body> or using defer as the relevant interview answer.
+
+22. BASIC JAVASCRIPT SYNTAX
+Now start learning how JavaScript code is written.
+
+RULE 1 — JAVASCRIPT IS CASE-SENSITIVE
+These are different:
+console
+Console
+CONSOLE
+JavaScript treats them as different names.
+Correct:
+console.log("Hello");
+Incorrect:
+Console.log("Hello");
+
+23. RULE 2 — WHITESPACE
+These generally mean the same thing:
+console.log(5);
+and:
+console.log( 5 );
+Whitespace is mainly used to make code easier to read.
+
+
+
+24. RULE 3 — STRINGS NEED QUOTES
+Correct:
+console.log("Hello");
+Also valid:
+console.log('Hello');
+Incorrect:
+console.log(Hello);
+Why?
+Because:
+"Hello"
+means:
+This is text.
+Whereas:
+Hello
+means:
+Look for something named Hello.
+
+25. RULE 4 — PARENTHESES
+A function is called using parentheses.
+console.log("Hello");
+Here:
+console.log
+refers to the function.
+()
+calls it.
+
+26. RULE 5 — BRACKETS MUST MATCH
+Correct:
+console.log("Hello");
+Incorrect:
+console.log("Hello";
+Opening and closing symbols must match.
+Examples:
+( )
+{ }
+[ ]
+" "
+' '
+
+27. WHAT IS A STATEMENT?
+A statement is an instruction given to JavaScript.
+Example:
+console.log("Hello");
+Another:
+console.log("Welcome");
+Multiple statements:
+console.log("First");
+console.log("Second");
+console.log("Third");
+They execute in order.
+
+
+28. SEMICOLONS
+A semicolon marks the end of a statement.
+Example:
+let name = "Ravi";
+console.log(name);
+JavaScript has Automatic Semicolon Insertion (ASI).
+Therefore semicolons are technically not required in every situation.
+But for this course:
+End statements with semicolons consistently.
+Interview answer
+Semicolons are technically optional because JavaScript has Automatic Semicolon Insertion, but using them consistently improves readability and avoids certain edge cases.
+
+29. COMMENTS
+Comments are notes written for humans.
+JavaScript ignores them.
+
+SINGLE-LINE COMMENT
+// This is a comment
+console.log("Hello");
+Everything after:
+//
+on that line is ignored.
+
+MULTI-LINE COMMENT
+/*
+This is a
+multi-line comment
+*/
+Example:
+/*
+Print welcome message
+*/
+console.log("Welcome");
+
+30. IMPORTANT COMMENT TRAP
+Look at:
+console.log("Hello // World");
+Output:
+Hello // World
+Why?
+Because // is inside quotation marks.
+Inside a string:
+"//"
+it is text.
+It is not a comment.
+
+31. UNFINISHED MULTI-LINE COMMENT
+Consider:
+/*
+console.log("Hello");
+console.log("Welcome");
+The comment was opened but never closed.
+Therefore the code is treated as part of the comment.
+This can create a situation where expected output simply disappears.
+
+32. THE CONSOLE
+The browser provides:
+console
+It has useful methods.
+
+console.log()
+console.log("Hello");
+Used for normal output and debugging.
+
+console.warn()
+console.warn("Be careful");
+Used for warnings.
+
+console.error()
+console.error("Something went wrong");
+Used for errors.
+
+console.table()
+Awareness only for Day 1.
+It can display structured data in table form.
+
+33. console.log WITH MULTIPLE VALUES
+Example:
+console.log("Name:", "Ravi");
+Output:
+Name: Ravi
+Another:
+console.log("A", "B", "C");
+Output:
+A B C
+The comma passes separate arguments to console.log().
+
+34. COMMA VS PLUS
+Very important.
+Comma
+console.log("Hello", "World");
+Output:
+Hello World
+Two values are passed to console.log.
+Plus
+console.log("Hello" + "World");
+Output:
+HelloWorld
+The strings are joined first.
+
+35. FIRST PROGRAM
+console.log("Welcome to JavaScript");
+console.log(2 + 3);
+console.log("Done");
+Output:
+Welcome to JavaScript
+5
+Done
+Why is the second output 5?
+Because:
+2 + 3
+is an expression.
+JavaScript evaluates it:
+2 + 3
+ ↓
+ 5
+Then:
+console.log(5);
+prints the result.
+
+36. TEXT VS EXPRESSION
+Compare:
+console.log("2 + 3");
+Output:
+2 + 3
+Because quotes make it text.
+Now:
+console.log(2 + 3);
+Output:
+5
+Because JavaScript evaluates the expression.
+
+37. STRING JOINING
+console.log("2" + "3");
+Output:
+23
+Why?
+Because:
+"2"
+and:
+"3"
+are strings.
++ joins them.
+
+38. SUPPORTING CONCEPT — VARIABLES
+Variables will be taught properly on Day 2.
+For Day 1, only understand this basic form:
+let name = "Asha";
+let age = 25;
+Think:
+name → "Asha"
+
+age → 25
+Then:
+console.log(name);
+console.log(age);
+Output:
+Asha
+25
+
+39. THE MOST IMPORTANT RULE ABOUT =
+Consider:
+let price = 120;
+Read it as:
+Create a variable called price and store the value 120.
+Now:
+let total = price * 3;
+JavaScript first evaluates:
+price * 3
+120 * 3
+360
+Then stores:
+total = 360
+So:
+The right side is evaluated first, and the result is stored on the left.
+
+40. VARIABLES STORE VALUES
+Consider:
+let price = 100;
+
+let total = price * 2;
+
+price = 50;
+
+console.log(total);
+Output:
+200
+Why?
+At the moment this executes:
+let total = price * 2;
+JavaScript calculates:
+100 * 2
+= 200
+and stores:
+total = 200
+Changing price later does not automatically recalculate total.
+
+41. CODE TRACING METHOD
+For every output question, use this process:
+STEP 1
+Read the code from the top.
+STEP 2
+Ignore comments.
+STEP 3
+Identify variables and their current values.
+STEP 4
+Evaluate expressions.
+STEP 5
+Follow statements in order.
+STEP 6
+Write the output.
+STEP 7
+If an error occurs, stop at the error unless it is handled.
+
+42. TRACE TABLE
+Example:
+let price = 120;
+let quantity = 3;
+let total = price * quantity;
+
+console.log(total);
+Trace:
+Line	Action	Current value
+let price = 120	Create price	price = 120
+let quantity = 3	Create quantity	quantity = 3
+let total = price * quantity	Calculate	total = 360
+console.log(total)	Print	360
+
+43. BEGINNER OUTPUT PRACTICE
+Question 1
+console.log("Hello");
+console.log("World");
+Output:
+Hello
+World
+
+Question 2
+console.log(10 + 5);
+Output:
+15
+
+Question 3
+console.log("10 + 5");
+Output:
+10 + 5
+
+Question 4
+console.log("Hello", "World");
+Output:
+Hello World
+
+Question 5
+// console.log("A");
+console.log("B");
+Output:
+B
+
+44. INTERMEDIATE OUTPUT PRACTICE
+Question 6
+console.log(2 + 3 * 4);
+Output:
+14
+Reason:
+3 * 4 = 12
+2 + 12 = 14
+
+Question 7
+console.log("A" + "B" + "C");
+Output:
+ABC
+
+Question 8
+let x = 5;
+let y = x * 2;
+
+console.log(y);
+Output:
+10
+
+Question 9
+console.log(10 / 4);
+Output:
+2.5
+
+45. INTERVIEW-LEVEL OUTPUT THINKING
+Question
+let a = 10;
+let b = a;
+
+a = 20;
+
+console.log(b);
+Output:
+10
+Explain it
+When:
+let b = a;
+runs:
+a = 10
+b = 10
+Later:
+a = 20;
+changes a.
+It does not change the already stored value in b.
+
+46. ERROR FINDING
+Error 1
+Console.log("Hello");
+Problem:
+Console
+instead of:
+console
+JavaScript is case-sensitive.
+
+Error 2
+console.log("Hello);
+Problem:
+Missing closing quote.
+This is a syntax error.
+
+Error 3
+console.log("Total:" 100);
+Problem:
+Missing comma.
+Correct:
+console.log("Total:", 100);
+
+Error 4
+console.Log("Hello");
+console exists, but:
+Log
+is not the correct method name.
+Correct:
+console.log("Hello");
+
+Error 5
+let message = Hello World;
+Text requires quotes.
+Correct:
+let message = "Hello World";
+
+47. DEBUGGING MINDSET
+Do not randomly change code.
+Use this process:
+1. What should happen?
+        ↓
+2. What actually happened?
+        ↓
+3. Where does the difference begin?
+        ↓
+4. Is it syntax, runtime or logic?
+        ↓
+5. Identify the exact line
+        ↓
+6. Fix it
+        ↓
+7. Run again
+
+48. DEBUGGING EXAMPLE
+Problem:
+let price = 15;
+let qty = 4;
+
+let total = price + qty;
+
+console.log("Total:", total);
+Expected:
+Total: 60
+Actual:
+Total: 19
+There is no syntax error.
+There is no runtime error.
+Therefore:
+Logical error
+The programmer used:
+price + qty
+instead of:
+price * qty
+Correct:
+let total = price * qty;
+
+49. DEBUGGING EXAMPLE — MISSING OUTPUT
+console.log("Loading page");
+
+/*
+console.log("Loading styles");
+console.log("Loading scripts");
+Expected:
+Loading page
+Loading styles
+Loading scripts
+But only the first line appears.
+Problem:
+The multi-line comment was not closed.
+Correct:
+console.log("Loading page");
+
+/*
+Setup section
+*/
+
+console.log("Loading styles");
+console.log("Loading scripts");
+
+50. DEBUGGING EXAMPLE — VARIABLE INSIDE STRING
+Problem:
+let name = "Ravi";
+
+console.log("Hello, name");
+Output:
+Hello, name
+The programmer expected:
+Hello, Ravi
+Why?
+Because everything inside:
+" "
+is treated as text.
+Correct:
+console.log("Hello, " + name);
+or:
+console.log("Hello,", name);
+
+51. INTERVIEW COMMUNICATION SKILL
+Do not only write code.
+Learn to explain the code verbally.
+For every coding problem, follow:
+UNDERSTAND
+    ↓
+EXPLAIN APPROACH
+    ↓
+WRITE CODE
+    ↓
+TRACE CODE
+    ↓
+CHECK OUTPUT
+    ↓
+EXPLAIN COMPLEXITY / ALTERNATIVE
+Complexity will become more important later.
+For Day 1, focus on clearly explaining the approach.
+
+52. INTERVIEW QUESTIONS — BASIC
+Q1. What is JavaScript?
+Answer
+JavaScript is a dynamically typed programming language used to add behaviour and interactivity to webpages. It runs in browsers and can also run outside browsers using environments such as Node.js.
+
+Q2. What is the difference between HTML, CSS and JavaScript?
+Answer
+HTML provides structure, CSS controls presentation, and JavaScript controls behaviour and interactivity.
+
+Q3. What is a JavaScript engine?
+Answer
+A JavaScript engine is software that parses and executes JavaScript code. For example, Chrome uses V8, Firefox uses SpiderMonkey, and Safari uses JavaScriptCore.
+
+Q4. What is console.log()?
+Answer
+console.log() prints values to the developer console. It is commonly used for learning, debugging and inspecting program behaviour.
+
+Q5. What is ECMAScript?
+Answer
+ECMAScript is the standardized specification that defines the JavaScript language.
+
+
+
+53. INTERMEDIATE INTERVIEW QUESTIONS
+Q6. Is JavaScript compiled or interpreted?
+Answer
+JavaScript is traditionally described as an interpreted language, but modern JavaScript engines use just-in-time compilation to improve execution performance.
+
+Q7. Are semicolons mandatory?
+Answer
+No. JavaScript has Automatic Semicolon Insertion, so semicolons can often be omitted. However, using them consistently can improve readability and avoid certain edge cases.
+
+Q8. What is the difference between syntax and runtime errors?
+Answer
+A syntax error occurs when the JavaScript code cannot be correctly parsed. A runtime error occurs after execution has started and something fails during execution.
+
+Q9. Why does this fail?
+console.log(Hello);
+Answer
+Hello is interpreted as an identifier rather than text.
+If no variable called Hello exists, JavaScript throws a ReferenceError.
+Correct:
+console.log("Hello");
+
+54. SCENARIO-BASED INTERVIEW QUESTIONS
+Scenario 1
+The console says ReferenceError: total is not defined. What do you check?
+Answer:
+I would first locate the line causing the error, check whether total was declared, and verify its spelling and scope. Since it is a runtime error, statements before that line may already have executed.
+
+Scenario 2
+Nothing is printed and there is no error. What would you check?
+Answer:
+I would check whether the code is inside an unclosed comment or string, whether the JavaScript file is correctly linked, whether the file was saved, and whether the browser console is filtering the messages.
+
+Scenario 3
+Why is this different?
+console.log("Hello", "World");
+vs
+console.log("Hello" + "World");
+Answer:
+The comma passes two separate arguments to console.log, which displays them with a space. The + operator joins the two strings first, producing HelloWorld.
+
+55. CODING PROBLEM 1 — INTRODUCTION CARD
+Problem
+Store:
+
+name
+
+
+city
+
+
+experience
+
+and print them as labelled lines.
+Expected
+Name: Arun
+City: Chennai
+Experience: 2 years
+Think first
+Ask:
+What information do I need?
+What variables should I create?
+How should I display each value?
+Solution
+let name = "Arun";
+let city = "Chennai";
+let experience = 2;
+
+console.log("Name:", name);
+console.log("City:", city);
+console.log("Experience:", experience, "years");
+
+56. CODING PROBLEM 2 — RECTANGLE
+Given:
+length = 8
+width = 5
+Find:
+Area
+Perimeter
+Formula
+Area = length × width
+Perimeter = 2 × (length + width)
+Solution
+let length = 8;
+let width = 5;
+
+let area = length * width;
+let perimeter = 2 * (length + width);
+
+console.log("Area:", area);
+console.log("Perimeter:", perimeter);
+
+57. CODING PROBLEM 3 — SECONDS IN A DAY
+Use variables for:
+hours
+minutes
+seconds
+Solution
+let hoursPerDay = 24;
+let minutesPerHour = 60;
+let secondsPerMinute = 60;
+
+let secondsPerDay =
+    hoursPerDay * minutesPerHour * secondsPerMinute;
+
+console.log("Seconds in a day:", secondsPerDay);
+Expected:
+Seconds in a day: 86400
+
+58. CODING PROBLEM 4 — AVERAGE
+Marks:
+78
+85
+92
+Find:
+Total
+Average
+Solution
+let m1 = 78;
+let m2 = 85;
+let m3 = 92;
+
+let total = m1 + m2 + m3;
+let average = total / 3;
+
+console.log("Total:", total);
+console.log("Average:", average);
+
+59. CODING PROBLEM 5 — TEMPERATURE
+Given:
+Celsius = 37
+Formula:
+F = C × 9 / 5 + 32
+Solution
+let celsius = 37;
+
+let fahrenheit = celsius * 9 / 5 + 32;
+
+console.log(celsius + " C = " + fahrenheit + " F");
+Expected:
+37 C = 98.6 F
+
+60. CODING PROBLEM 6 — BILL SPLIT
+Given:
+Bill = 2450
+People = 7
+Calculate each person's share.
+let bill = 2450;
+let people = 7;
+
+let share = bill / people;
+
+console.log("Each pays:", share);
+
+61. INTERVIEW CODING PROBLEM — DISCOUNT
+Given:
+price = 500
+discount = 10%
+The following code is wrong:
+let price = 500;
+let discount = 10;
+
+let discountedPrice = price - discount;
+
+console.log(discountedPrice);
+Actual result:
+490
+But the correct result is:
+450
+Why?
+Because 10 means 10 units, not 10%.
+Correct:
+let discountedPrice =
+    price - price * discount / 100;
+
+62. INTERVIEW CODING PROBLEM — COPY OF VALUE
+Predict the output:
+let original = 100;
+let copy = original;
+
+original = 200;
+
+console.log(original);
+console.log(copy);
+Output:
+200
+100
+Interview explanation:
+The assignment copied the current value of original into copy. Reassigning original later does not change copy.
+This is only a foundation. Objects and reference behaviour will be taught later.
+
+63. PRACTICAL CLASS ACTIVITIES
+Activity 1 — Console Tour
+Run:
+console.log("Normal message");
+console.warn("Warning message");
+console.error("Error message");
+Observe the browser console.
+
+Activity 2 — Break the Code
+Intentionally create:
+A syntax error
+console.log("Hello);
+A runtime error
+console.log(unknownVariable);
+A logical error
+let total = 10 + 5;
+when the intended calculation was multiplication.
+Identify the category of each problem.
+
+64. ACTIVITY 3 — THREE WAYS TO RUN JAVASCRIPT
+Run:
+console.log("It works");
+using:
+A
+Browser console.
+B
+Inline <script>.
+C
+External app.js.
+The goal is not memorization.
+The goal is to understand:
+JavaScript can be executed through different environments and loading methods.
+
+65. DAY 1 HOMEWORK
+SECTION A — CONCEPT QUESTIONS
+
+What is JavaScript?
+
+
+Why is JavaScript needed on webpages?
+
+
+What is the difference between HTML, CSS and JavaScript?
+
+
+Is HTML a programming language? Explain.
+
+
+What is a JavaScript engine?
+
+
+Name three JavaScript engines.
+
+
+What is ECMAScript?
+
+
+What is a statement?
+
+
+What is a comment?
+
+
+Why are semicolons commonly used?
+
+
+What is console.log() used for?
+
+
+What is the difference between syntax and runtime errors?
+
+
+66. HOMEWORK — OUTPUT QUESTIONS
+Q1
+console.log("3" + "4");
+Q2
+console.log(3 + 4 * 2);
+Q3
+let a = 7;
+let b = a;
+
+b = 9;
+
+console.log(a);
+Q4
+console.log("One");
+// console.log("Two");
+console.log("Three");
+Q5
+let width = 4;
+let area = width * width;
+
+width = 10;
+
+console.log(area);
+Instruction
+Do not execute the code first.
+Predict the output.
+Then run it and verify.
+
+67. HOMEWORK — ERROR FINDING
+Find and correct the errors.
+Q1
+console.log('Hello");
+Q2
+consol.log("Hi");
+Q3
+let city = Chennai;
+Q4
+Console.log("Hello");
+Q5
+console.log("Total:" 100);
+For every question identify:
+What is wrong?
+Why is it wrong?
+What type of error is it?
+How can it be corrected?
+
+68. HOMEWORK — DEBUGGING
+Problem 1
+Expected:
+Total: 250
+Actual:
+Total: 55
+Code:
+let price = 50;
+let qty = 5;
+
+let total = price + qty;
+
+console.log("Total:", total);
+Find the logical error.
+
+Problem 2
+Expected:
+Hello
+Bye
+Code:
+/*
+Greeting
+
+console.log("Hello");
+console.log("Bye");
+Find the problem.
+
+69. HOMEWORK — CODING
+Basic
+Store:
+movie name
+year
+rating
+Print:
+Movie:
+Year:
+Rating:
+
+Intermediate
+A car travels:
+150 km
+12 litres
+Calculate:
+Mileage = distance / fuel
+Print all three values.
+
+Interview-Oriented
+Monthly salary:
+45000
+Hike:
+12%
+Calculate:
+Yearly salary
+Yearly salary after hike
+Use variables so that changing the salary or hike automatically changes the result.
+
+70. DAY-END REVISION
+Before finishing Day 1, the learner should be able to explain:
+□ What JavaScript is
+□ Why JavaScript exists
+□ HTML = structure
+□ CSS = presentation
+□ JavaScript = behaviour
+□ What a JavaScript engine is
+□ V8
+□ SpiderMonkey
+□ JavaScriptCore
+□ Browser → engine → parse → execute
+□ JavaScript executes statements in order
+□ What a statement is
+□ Why semicolons are used
+□ Single-line comments
+□ Multi-line comments
+□ console.log()
+□ Multiple arguments in console.log()
+□ String vs expression
+□ Basic let usage
+□ Right side of = is evaluated first
+□ Syntax error
+□ Runtime error
+□ Logical error
+
+71. "EXPLAIN THIS IN AN INTERVIEW"
+The learner should answer these without reading notes:
+Question 1
+What is JavaScript?
+Question 2
+What is the difference between HTML, CSS and JavaScript?
+Question 3
+How does a browser execute JavaScript?
+Question 4
+What is a JavaScript engine?
+Question 5
+What is ECMAScript?
+Question 6
+Is JavaScript compiled or interpreted?
+Question 7
+Are semicolons mandatory?
+Question 8
+What is the difference between syntax and runtime errors?
+Question 9
+Why does this work?
+console.log("Hello");
+but this can fail?
+console.log(Hello);
+Question 10
+Why does this print 200?
+let price = 100;
+
+let total = price * 2;
+
+price = 50;
+
+console.log(total);
+
+72. DAY 1 MINI MOCK INTERVIEW
+Answer verbally before checking notes.
+Round 1 — Fundamentals
+
+What is JavaScript?
+
+
+Why do we need JavaScript if HTML and CSS already exist?
+
+
+What is the difference between JavaScript and Java?
+
+
+What is ECMAScript?
+
+
+Name three JavaScript engines.
+
+Round 2 — Execution
+
+What happens when the browser encounters a <script>?
+
+
+What does parsing mean?
+
+
+What happens when parsing fails?
+
+
+What is a runtime error?
+
+
+Does JavaScript execute statements in random order?
+
+Round 3 — Syntax
+
+Is JavaScript case-sensitive?
+
+
+Why do strings need quotes?
+
+
+What does () do in console.log()?
+
+
+Why do we use semicolons?
+
+
+What are comments?
+
+Round 4 — Output
+Predict without running:
+console.log("5" + "5");
+console.log(10 - 2 * 3);
+let x = 4;
+let y = x + 1;
+
+x = 100;
+
+console.log(y);
+Round 5 — Debugging
+Find the problem:
+console.log("Result:" 42);
+Find the problem:
+let user = "Meera";
+console.log("Hello, user");
+
+73. DAY 1 FINAL ASSESSMENT
+A. CONCEPT
+1.Name the three main technologies and explain their roles.
+2.What does a JavaScript engine do?
+3.What is ECMAScript?
+
+B. OUTPUT
+4.
+console.log("5" + "5");
+5.
+console.log(10 - 2 * 3);
+6.
+let x = 4;
+let y = x + 1;
+
+x = 100;
+
+console.log(y);
+
+C. DEBUGGING
+7.
+Fix:
+console.log("Result:" 42);
+8.
+Fix:
+let user = "Meera";
+
+console.log("Hello, user");
+Expected:
+Hello, Meera
+
+D. CODING
+9.
+Print the number of minutes in one week using variables for:
+days
+hours
+minutes
+10.
+A product costs:
+899
+Shipping:
+49
+Quantity:
+3
+Print:
+Product subtotal
+Grand total
+Shipping should be charged only once.
+
+74. DAY 1 SUCCESS CRITERIA
+Explain
+What JavaScript is and why it is used.
+
+Differentiate
+HTML vs CSS vs JavaScript.
+Describe
+Browser → JavaScript engine → parse → execute.
+Run
+JavaScript in the browser console and an external .js file.
+Write
+Basic JavaScript statements.
+Use
+console.log() correctly.
+Identify
+Syntax, runtime and logical errors.
+Trace
+A small program line by line.
+Predict
+Output before executing the program.
+Code
+A simple problem from a written requirement.
+Speak
+Explain the solution verbally as if answering an interviewer.
+
+
+75. FINAL CHECK
+Before moving to Day 2, explain this program completely:
+let item = "Notebook";
+let price = 120;
+let quantity = 3;
+
+let total = price * quantity;
+
+console.log("Item:", item);
+console.log("Price:", price);
+console.log("Quantity:", quantity);
+console.log("Total:", total);
+ explain:
+What is item?
+What is price?
+What is quantity?
+What does = mean?
+What happens on the right side of =?
+What is total?
+Why is total 360?
+What does console.log do?
+Why are some values inside quotes?
+Why are item, price and quantity not inside quotes?
+What is the execution order?
+What will be printed?
+ the foundation for Day 2 is ready.
+
+
+
+
+
+
+
+
+DAY 1 CORE TAKEAWAY
+Remember this mental model:
+HTML
+  ↓
+Structure
+
+CSS
+  ↓
+Appearance
+
+JavaScript
+  ↓
+Behaviour
+
+
+And for JavaScript execution:
+JavaScript Code
+      ↓
+JavaScript Engine
+      ↓
+Parse
+      ↓
+Execute
+      ↓
+Output / Behaviour
+
+And for solving beginner programs:
+Read the problem
+      ↓
+Identify the required values
+      ↓
+Store values
+      ↓
+Evaluate expressions
+      ↓
+Print the result
+      ↓
+Trace and verify
+      ↓
+Explain your solution
