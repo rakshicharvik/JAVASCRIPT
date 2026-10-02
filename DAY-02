@@ -1,0 +1,1019 @@
+# DAY 2 — VARIABLES
+## var · let · const · Naming Conventions · Declaration vs Initialization · Reassignment · Redeclaration · Scope Introduction
+### 1. LEARNING OBJECTIVES
+By the end of Day 2 the learner should be able to:
+- Explain what a variable is and why programs need them
+- Declare variables with `var`, `let` and `const` and state the differences precisely
+- Distinguish declaration, initialization, reassignment and redeclaration
+- Follow JavaScript naming rules and camelCase convention
+- Explain global scope and block scope, and predict output of code using `{ }` blocks
+- Explain (at awareness level) why `var` prints `undefined` before its line and `let` throws an error
+- Choose `const` by default and `let` when reassignment is needed, and justify the choice
+### 2. TOPICS TO TEACH
+1. What is a variable? Why do we need it?
+2. Declaring with `var`, `let`, `const`
+3. Declaration vs initialization; the default value `undefined`
+4. Reassignment
+5. Redeclaration
+6. Naming rules and conventions (camelCase, meaningful names, reserved words)
+7. Scope introduction: global scope, block scope, (function scope: preview only)
+8. `var` vs `let`/`const` inside blocks
+9. Hoisting and the Temporal Dead Zone: awareness level (deep dive Day 29)
+10. Which keyword to use, and why
+
+
+
+
+--### 3. CONCEPT EXPLANATION
+### 3.1 What is a variable?
+**Definition.** A variable is a named container that stores a value so the program can use and change it later.
+
+**Why it exists.** Programs work with data that changes: a score, a username, a price. Without variables you would have to hard-code every value and could not reuse or update it.
+
+**Mental model.** A labelled box. `let score = 0;` creates a box labelled `score` containing `0`. `score = 10;` replaces the contents. `console.log(score)` looks inside.
+
+**Interview relevance.** "What is a variable?" → a named reference to a value stored in memory.
+
+#### 3.2 Declaring variables: `var`, `let`, `const`
+
+There are three keywords. Syntax:
+
+```javascript
+var a = 1;      // old way (pre-2015). Function-scoped. 
+let b = 2;      // modern. Block-scoped. Can be reassigned.
+const c = 3;    // modern. Block-scoped. Cannot be reassigned.
+```
+
+
+
+
+
+
+|              | `var` | `let` | `const` |
+| Scope | Function (ignores `{ }` blocks) | Block `{ }` | Block `{ }` |
+| Can be reassigned | Yes | Yes | **No** |
+| Can be redeclared in same scope | Yes | **No** | **No** |
+| Must be initialized at declaration | Yes | No | **Yes** |
+| Before its line runs | `undefined` (hoisted & initialized) | ReferenceError (TDZ) | ReferenceError (TDZ) |
+| Use in modern code | Avoid | When value changes | Default |
+
+**Why three keywords exist.** `
+
+var` was the only option for 20 years and its behaviour (leaking out of blocks, allowing accidental redeclaration) caused bugs.
+
+ ES6 added `let` and `const` to fix these. `var` is still supported so old code keeps working, and interviewers ask about it precisely because the differences reveal understanding of scope.
+
+#### 3.3 Declaration vs Initialization
+- **Declaration**: creating the variable name. `let age;`
+- **Initialization**: giving it its first value. `age = 25;`
+- Both together: `let age = 25;`
+```javascript
+let age;  // declaration
+console.log(age);   // undefined  ← declared, not initialized
+age = 25;
+console.log(age);   // 25
+```
+
+**Important points.**
+- A declared-but-uninitialized variable holds the special value `undefined` (a real value meaning "nothing assigned yet"; data types on Day 3).
+- `const` must be initialized on the same line: `const x;` is a **SyntaxError: Missing initializer in const declaration**.
+
+**Common mistake.** Treating `undefined` as an error. It is not; it is JavaScript telling you the box is empty.
+
+#### 3.4 Reassignment
+Giving an existing variable a new value. No keyword is used again.
+```javascript
+let count = 1;
+count = 2;          // reassignment: allowed with let
+count = count + 1;  // read current value (2), add 1, store 3
+console.log(count); // 3
+```
+
+```javascript
+const limit = 10;
+limit = 20;         // TypeError: Assignment to constant variable.
+```
+
+**How `count = count + 1` executes.** Right side first: read `count` (2), compute 3. Then store 3 into `count`. `=` is *assignment*, not mathematical equality.
+
+**Common mistake.** Writing `let count = 2;` a second time (that is redeclaration, not reassignment) or forgetting that `=` replaces, not compares.
+
+
+
+
+#### 3.5 Redeclaration
+Declaring the same name again in the same scope.
+```javascript
+var x = 1;
+var x = 2;      // allowed with var (silently replaces)
+console.log(x); // 2
+
+let y = 1;
+let y = 2;      // SyntaxError: Identifier 'y' has already been declared
+```
+
+**Why it matters.** With `var`, redeclaring a variable 200 lines later silently overwrites it; no warning. `let`/`const` catch this at parse time, before anything runs.
+
+**Interview angle.** "Can you redeclare a variable?" → With `var` yes; with `let`/`const` no in the same scope. In a *different* block, `let y` is a different variable (see 3.7).
+
+#### 3.6 Naming rules and conventions
+**Rules (enforced by the engine):**
+1. May contain letters, digits, `_`, `$`
+2. Cannot start with a digit: `let 1st = 5;` is a SyntaxError
+3. Case sensitive: `total`, `Total`, `TOTAL` are three variables
+4. Cannot be a reserved word: `let let = 1;`, `const class = 2;`, `let if = 3;` are errors
+5. No spaces or hyphens: `let first name` and `let first-name` are errors
+
+**Conventions (agreed by developers, not enforced):**  
+- `camelCase` for variables: `totalPrice`, `userName`, `isLoggedIn`
+- `UPPER_SNAKE_CASE` for true constants: `const MAX_RETRIES = 3;`
+- Meaningful names: `price` not `p`; `isActive` for booleans
+- Start with a lowercase letter (capitalised names are conventionally reserved for classes, later)
+
+**Interview angle.** Interviewers judge naming in every coding round. `let a = 5; let b = a * 2;` is valid but weak; `let hours = 5; let minutes = hours * 60;` shows intent.
+
+#### 3.7 Scope introduction
+**Definition.** Scope is the region of code where a variable is accessible.
+**Global scope.** A variable declared outside any block or function is global: accessible everywhere in the file.
+```javascript
+let appName = "Tracker";   // global
+{
+  console.log(appName);    // Tracker  ← inner code can see outer variables
+}
+```
+
+**Block scope.** A block is any code between `{ }`. `let` and `const` declared inside a block exist only inside it.
+
+```javascript
+{
+  let secret = 42;
+  console.log(secret);   // 42
+}
+console.log(secret);     // ReferenceError: secret is not defined
+```
+
+**`var` ignores blocks.**
+
+```javascript
+{
+  var leaked = "I escaped";
+}
+console.log(leaked);     // I escaped  ← var is not block-scoped
+```
+
+**Shadowing (same name, different scopes).**
+
+```javascript
+let x = 10;
+{
+  let x = 20;          // a NEW variable x, only inside the block
+  console.log(x);      // 20
+}
+console.log(x);        // 10  ← outer x untouched
+```
+
+Compare with `var`:
+
+```javascript
+var x = 10;
+{
+  var x = 20;          // SAME variable (var ignores the block)
+  console.log(x);      // 20
+}
+console.log(x);        // 20  ← outer x was overwritten
+```
+
+**Function scope (preview).** `var` is scoped to the nearest *function*. Functions are taught on Day 8; for now remember: `var` respects functions but not blocks; `let`/`const` respect both.
+
+**Lookup rule to teach.** When the engine needs a variable, it looks in the current block; if not found, it looks in the enclosing block; and so on outward to global. Inner can see outer; outer cannot see inner.
+
+**Interview relevance.** Block scope vs function scope is *the* var/let question. Both shadowing snippets above are common output questions.
+
+#### 3.8 Hoisting and the Temporal Dead Zone (awareness level)
+
+```javascript
+console.log(a);   // undefined
+var a = 10;
+
+console.log(b);   // ReferenceError: Cannot access 'b' before initialization
+let b = 10;
+```
+
+**What happens.** Before running, the engine registers every declaration in the scope ("hoisting"). `var` variables are registered *and* initialized to `undefined`; `let`/`const` are registered but left uninitialized. Accessing a `let`/`const` between the start of the scope and its declaration line is the **Temporal Dead Zone (TDZ)** and throws a ReferenceError.
+
+**Why `let` behaviour is better.** A ReferenceError points at the bug immediately; `undefined` may travel through the program silently and break something far away.
+
+Day 29 covers execution context and hoisting in depth. For Day 2, the learner should be able to reproduce these two snippets and explain them in two sentences.
+
+#### 3.9 Which keyword to use
+
+1. Default to `const`. If the value never changes, the reader knows it immediately.
+2. Use `let` only when you will reassign (counters, accumulators, values updated later).
+3. Do not use `var` in new code. Know its behaviour for old code and interviews.
+
+**Important nuance (interview favourite, fully explained Day 20).** `const` prevents *reassigning the variable*, not *changing the contents of an object or array* it points to. Today: `const` + primitive value = truly fixed.
+
+---
+
+### 4. TEACHING EXAMPLES
+
+**Example 1 — Basic: declare, initialize, reassign**
+```javascript
+
+let score = 0;
+console.log(score);   
+score = 10;
+console.log(score);   
+score = score + 5;
+console.log(score);   
+```
+
+**Example 2 — Slightly different: `const` and the error**
+
+```javascript
+const taxRate = 0.18;
+console.log(taxRate);      // 0.18
+taxRate = 0.2;             // TypeError: Assignment to constant variable.
+console.log("after");      // never runs
+```
+
+Output: `0.18`, then the error. Teaching point: TypeError is a *runtime* error, so `0.18` printed first.
+
+**Example 3 — Interview-oriented: block scope with `let` vs `var`**
+
+```javascript
+let a = 1;
+var b = 1;
+{
+  let a = 2;
+  var b = 2;
+}
+console.log(a);  
+ console.log(b);  
+```
+
+Teaching point: inner `let a` is a new variable; inner `var b` is the same outer `b`.
+
+
+**Example 4 — Practical scenario: configuration vs state**
+
+```javascript
+const MAX_ATTEMPTS = 3;      // configuration: never changes
+const appName = "LoginApp";  // fixed for the program
+let attempts = 0;            // state: changes over time
+
+attempts = attempts + 1;
+console.log(appName, "- attempt", attempts, "of", MAX_ATTEMPTS);
+attempts = attempts + 1;
+console.log(appName, "- attempt", attempts, "of", MAX_ATTEMPTS);
+```
+
+Output:
+```
+LoginApp - attempt 1 of 3
+LoginApp - attempt 2 of 3
+```
+
+Teaching point: the keyword communicates intent. A reader sees `const` and knows "this will not change"; sees `let` and knows "watch this value".
+
+---
+
+### 5. CODE WALKTHROUGH
+
+**Tracing Example 3 with a scope diagram:**
+
+```
+GLOBAL SCOPE
+  a (let) = 1
+  b (var) = 1  →  becomes 2 when the block runs
+  ┌─ BLOCK SCOPE ─────────────┐
+  │  a (let) = 2   ← new box  │
+  │  var b = 2  → no new box; │
+  │     writes to global b    │
+  └───────────────────────────┘
+```
+
+Step by step:
+1. `let a = 1;` global box `a` = 1.
+2. `var b = 1;` global box `b` = 1.
+3. Enter block. `let a = 2;` creates a *block-only* box `a` = 2. Global `a` is hidden (shadowed) here but unchanged.
+4. `var b = 2;` `var` does not see the block boundary, so this is a redeclaration of global `b` → global `b` = 2.
+5. Exit block. Block box `a` is destroyed.
+6. `console.log(a)` → global `a` → 1.
+7. `console.log(b)` → global `b` → 2.
+
+Sentence to say in an interview: "`let` created a new variable inside the block, so the outer one was untouched; `var` is function-scoped and ignores the block, so it overwrote the outer one."
+
+---
+
+### 6. OUTPUT-BASED QUESTIONS
+
+#### LEVEL 1 — Basic
+
+**Q1**
+```javascript
+let n;
+console.log(n);
+```
+Output: `undefined`. Explanation: declared but not initialized → default value `undefined`.
+
+**Q2**
+```javascript
+let n = 5;
+n = 8;
+console.log(n);
+```
+Output: `8`. Explanation: reassignment replaces the value.
+
+**Q3**
+```javascript
+const city = "Pune";
+console.log(city);
+```
+Output: `Pune`. Explanation: `const` can be read normally; only reassignment is forbidden.
+
+**Q4**
+```javascript
+var v = 1;
+var v = 2;
+console.log(v);
+```
+Output: `2`. Explanation: `var` allows redeclaration; the second replaces the first.
+
+**Q5**
+```javascript
+let total = 10;
+total = total + total;
+console.log(total);
+```
+Output: `20`. Explanation: right side evaluated with current value (10 + 10), then stored.
+
+#### LEVEL 2 — Intermediate
+
+**Q6**
+```javascript
+let x = 1;
+{
+  let x = 2;
+}
+console.log(x);
+```
+Output: `1`. Explanation: inner `let x` is a separate block-scoped variable.
+
+**Q7**
+```javascript
+var x = 1;
+{
+  var x = 2;
+}
+console.log(x);
+```
+Output: `2`. Explanation: `var` ignores the block; same variable overwritten.
+
+**Q8**
+```javascript
+let x = 1;
+{
+ x = 2;
+}
+console.log(x);
+```
+Output: `2`. Explanation: no `let` inside the block, so `x = 2` *reassigns* the outer variable rather than creating a new one. Compare carefully with Q6.
+
+**Q9**
+```javascript
+{
+  let hidden = "yes";
+}
+console.log(hidden);
+```
+Output: `ReferenceError: hidden is not defined`. Explanation: block-scoped variable does not exist outside the block.
+
+**Q10**
+```javascript
+const rate = 5;
+console.log(rate);
+rate = 6;
+console.log(rate);
+```
+Output: `5`, then `TypeError: Assignment to constant variable.` Explanation: the first log runs; the reassignment throws at runtime; the second log never runs.
+
+#### LEVEL 3 — Interview Thinking
+
+**Q11**
+```javascript
+console.log(a);
+var a = 10;
+console.log(a);
+```
+Output: `undefined`, then `10`. Explanation: `var a` is hoisted and initialized to `undefined`; the assignment happens on its own line.
+
+**Q12**
+```javascript
+console.log(b);
+let b = 10;
+```
+Output: `ReferenceError: Cannot access 'b' before initialization`. Explanation: `let` is in the Temporal Dead Zone until its line runs.
+
+**Q13**
+```javascript
+let a = 10;
+{
+  let a = 20;
+  {
+    console.log(a);
+  }
+}
+```
+Output: `20`. Explanation: lookup starts in the innermost block (no `a`), moves outward to the middle block (`a = 20`) and stops there. It never reaches the global `a`.
+
+**Q14**
+```javascript
+let a = 1;
+let b = a;
+a = a + 1;
+b = b + 10;
+console.log(a, b);
+```
+Output: `2 11`. Explanation: `b` received a copy of 1. Each variable is then updated independently.
+
+**Q15**
+```javascript
+var a = 1;
+{
+  let a = 2;
+  {
+    var a = 3;
+  }
+}
+```
+Output: `SyntaxError: Identifier 'a' has already been declared`. Explanation: `var a = 3` is hoisted out of its inner block up to the nearest function/global scope, but on the way it crosses the middle block where `let a` already exists, so the engine detects a conflicting declaration at parse time. Nothing runs. This is an advanced snippet; use it to show that syntax errors are detected before any output.
+
+---
+
+### 7. ERROR-FINDING QUESTIONS
+
+**E1**
+```javascript
+const pi;
+pi = 3.14;
+```
+Error: `SyntaxError: Missing initializer in const declaration`. Why: `const` must be initialized where it is declared.
+Corrected:
+```javascript
+const pi = 3.14;
+```
+
+**E2**
+```javascript
+let total = 5;
+let total = 10;
+```
+Error: `SyntaxError: Identifier 'total' has already been declared`. Why: `let` cannot be redeclared in the same scope. The intent was reassignment.
+Corrected:
+```javascript
+let total = 5;
+total = 10;
+```
+
+**E3**
+```javascript
+let 2ndPlace = "Silver";
+```
+Error: `SyntaxError: Invalid or unexpected token`. Why: names cannot start with a digit.
+Corrected:
+```javascript
+let secondPlace = "Silver";
+```
+
+**E4**
+```javascript
+let user name = "Kavi";
+```
+Error: `SyntaxError: Unexpected identifier`. Why: no spaces in names.
+Corrected:
+```javascript
+let userName = "Kavi";
+```
+
+**E5**
+```javascript
+let count = 0;
+Count = count + 1;
+console.log(count);
+```
+What happens: no error in a non-strict script; `Count` (capital C) becomes a brand-new accidental global variable, and `count` stays `0`. Output `0`. This is a **logical error** caused by case sensitivity.
+Corrected:
+```javascript
+let count = 0;
+count = count + 1;
+console.log(count);   // 1
+```
+Note: in strict mode or in modules, `Count = ...` would throw a ReferenceError instead, which is one reason modern code uses strict mode.
+
+**E6**
+```javascript
+const MAX = 100;
+MAX = MAX + 1;
+```
+Error: `TypeError: Assignment to constant variable.` (runtime). Why: `const` cannot be reassigned. If the value must change, it should be `let`.
+Corrected:
+```javascript
+let max = 100;
+max = max + 1;
+```
+
+---
+
+### 8. DEBUGGING PRACTICE
+
+#### DEBUGGING PROBLEM 1
+
+Problem: track a visitor count that should reach 3 after three visits.
+
+```javascript
+let visitors = 0;
+{
+  let visitors = visitors + 1;
+}
+{
+  let visitors = visitors + 1;
+}
+{
+  let visitors = visitors + 1;
+}
+console.log(visitors);
+```
+
+Expected: `3`.
+Task: find and fix.
+
+**Solution.** Each block declares a *new* block-scoped `visitors`, and `let visitors = visitors + 1` even throws `ReferenceError: Cannot access 'visitors' before initialization` (the inner `visitors` is in its TDZ on the right side of its own declaration). Either way, the outer counter never changes.
+Corrected:
+```javascript
+let visitors = 0;
+{
+  visitors = visitors + 1;
+}
+{
+  visitors = visitors + 1;
+}
+{
+  visitors = visitors + 1;
+}
+console.log(visitors);   // 3
+```
+Reasoning: to update an existing variable, assign without `let`. Systematic check: "Am I creating a new variable or updating an old one?" The keyword answers it.
+
+#### DEBUGGING PROBLEM 2
+
+Problem: apply a discount and print the final price.
+
+```javascript
+const price = 1000;
+const discount = 200;
+price = price - discount;
+console.log("Final:", price);
+```
+
+Expected: `Final: 800`.
+Task: find and fix.
+
+**Solution.** `price` is `const` and is reassigned → TypeError. Two valid fixes; the better one keeps `const` and introduces a new name for the new concept.
+Corrected:
+```javascript
+const price = 1000;
+const discount = 200;
+const finalPrice = price - discount;
+console.log("Final:", finalPrice);
+```
+Reasoning: a *final price* is a different quantity from the *price*; giving it its own `const` is clearer than making `price` mutable.
+
+#### DEBUGGING PROBLEM 3
+
+Problem: the program prints `undefined` where a name is expected.
+
+```javascript
+console.log("User:", userName);
+var userName = "Divya";
+```
+
+Expected: `User: Divya`.
+Task: find and fix, and explain why it did not throw an error.
+
+**Solution.** `var userName` is hoisted and initialized to `undefined`, so the log runs before the assignment without an error.
+Corrected:
+```javascript
+const userName = "Divya";
+console.log("User:", userName);
+```
+Reasoning: declare before use; prefer `const`/`let`, which would have thrown a clear ReferenceError instead of silently printing `undefined`.
+
+---
+
+### 9. INTERVIEW QUESTIONS
+
+#### BASIC INTERVIEW QUESTIONS
+
+**1. What is a variable?**
+A named storage location for a value that the program can read and update.
+
+**2. What is the difference between `var`, `let` and `const`?**
+`var` is function-scoped, can be redeclared and reassigned, and is hoisted with `undefined`. `let` and `const` are block-scoped and cannot be redeclared in the same scope; `let` can be reassigned, `const` cannot. Modern code uses `const` by default and `let` when reassignment is needed.
+
+**3. What is the difference between declaration and initialization?**
+Declaration creates the variable name (`let x;`); initialization assigns its first value (`x = 5;`). A declared but uninitialized variable holds `undefined`.
+
+**4. Can a `const` variable be changed?**
+It cannot be reassigned. `const x = 1; x = 2;` throws a TypeError. (Contents of objects it points to can still change; covered later.)
+
+**5. What is scope?**
+The region of code where a variable is accessible. JavaScript has global scope, function scope and, for `let`/`const`, block scope.
+
+#### INTERMEDIATE INTERVIEW QUESTIONS
+
+**6. What is block scope? Which keywords respect it?**
+Any `{ }` creates a block. `let` and `const` declared inside exist only inside it. `var` ignores blocks and is scoped to the enclosing function.
+
+**7. What is hoisting?**
+Before execution, the engine registers all declarations in a scope. `var` declarations are initialized to `undefined`, so using them early gives `undefined`. `let`/`const` are hoisted but uninitialized, so using them early throws a ReferenceError.
+
+**8. What is the Temporal Dead Zone?**
+The period between entering a scope and reaching a `let`/`const` declaration. Accessing the variable in that period throws `ReferenceError: Cannot access 'x' before initialization`.
+
+**9. Why is `let` preferred over `var`?**
+Block scoping prevents variables leaking out of blocks and being overwritten accidentally; no redeclaration catches duplicate names at parse time; and TDZ errors surface use-before-declaration bugs instead of hiding them as `undefined`.
+
+**10. Why is `const` the recommended default?**
+It communicates that the binding never changes, prevents accidental reassignment, and makes code easier to reason about. You switch to `let` only where reassignment is genuinely needed.
+
+#### SCENARIO-BASED INTERVIEW QUESTIONS
+
+**11.** "A bug report says a total is sometimes zero. You find `var total` declared inside a block and also used outside. What might be happening?"
+Because `var` is not block-scoped, the outer code sees the same variable; if the block has not run yet, `total` is `undefined`/unset. Converting to `let` inside the block would surface a ReferenceError outside, revealing the design flaw; the real fix is declaring `total` in the scope where it is needed.
+
+**12.** "You see `let x = 1; let x = 2;` in a code review. What do you say?"
+That is a SyntaxError; the file will not run. If the intent is to update, write `x = 2`; if it is a different quantity, use a different name.
+
+**13.** "When would you still use `var`?"
+Practically never in new code. You need to *understand* it to maintain legacy code and to answer scope questions, but `let`/`const` cover every use case more safely.
+
+#### FOLLOW-UP QUESTIONS
+
+Interviewer: "Difference between `let` and `const`?"
+Follow-up: "So `const` makes a value immutable?" → It makes the *binding* immutable. For primitives that means the value cannot change; for objects the properties can still change (Day 20).
+Follow-up: "Can you declare `const` without a value?" → No; SyntaxError.
+
+Interviewer: "What is hoisting?"
+Follow-up: "Are `let` and `const` hoisted?" → Yes, but not initialized; hence the TDZ.
+Follow-up: "What is printed: `console.log(a); var a = 5;`?" → `undefined`.
+
+Interviewer: "What is block scope?"
+Follow-up: "What does this print?" (shadowing snippet with `let`, then with `var`) → 1 / 2; explain the difference in one sentence each.
+
+---
+
+### 10. INTERVIEW-FOCUSED CODING PROBLEMS
+
+#### LEVEL 1 — Easy
+
+**P1 — Swap two variables using a third**
+Problem: `a = 5, b = 9` → after swapping, print `a = 9, b = 5`.
+Hint: you need a temporary box.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+let a = 5;
+let b = 9;
+let temp = a;   // temp = 5
+a = b;          // a = 9
+b = temp;       // b = 5
+console.log("a =", a, ", b =", b);
+```
+Explanation: `a = b` would destroy the old `a`, so save it first. Follow-up: "Can you swap without a third variable?" → arithmetic: `a = a + b; b = a - b; a = a - b;` (works for numbers). Destructuring swap comes on Day 20.
+
+**P2 — Choose the right keyword**
+Problem: rewrite with the correct keywords and explain each choice.
+```javascript
+var siteName = "ShopEasy";
+var cartCount = 0;
+var TAX_RATE = 0.18;
+cartCount = cartCount + 1;
+```
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+const siteName = "ShopEasy";   // never changes
+let cartCount = 0;             // updated as items are added
+const TAX_RATE = 0.18;         // configuration constant
+cartCount = cartCount + 1;
+```
+
+**P3 — Running total**
+Problem: start `balance` at 1000; deposit 250; withdraw 400; deposit 75; print the balance after every step.
+Expected: `1250`, `850`, `925`.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+let balance = 1000;
+balance = balance + 250;  console.log(balance);  // 1250
+balance = balance - 400;  console.log(balance);  // 850
+balance = balance + 75;   console.log(balance);  // 925
+```
+Follow-up: "Why `let` and not `const`?" → the value is reassigned.
+
+#### LEVEL 2 — Intermediate
+
+**P4 — Predict, then correct the scope**
+Problem: state the output, then change exactly one line so the last line prints `Guest`.
+```javascript
+let role = "Admin";
+{
+  let role = "Guest";
+}
+console.log(role);
+```
+
+TRY FIRST.
+
+SOLUTION
+Output as written: `Admin`, because `let role` inside the block creates a new block-scoped variable and the outer one is untouched.
+Fix (change the block's line from a declaration to an assignment):
+```javascript
+let role = "Admin";
+{
+  role = "Guest";   // reassign the outer variable, don't redeclare
+}
+console.log(role);  // Guest
+```
+Explanation: the difference between `let role = ...` and `role = ...` inside a block is the difference between "new variable" and "update existing variable". Follow-up: "What if the outer line were `const role`?" → the assignment in the block would throw a TypeError.
+
+**P5 — Percentage split**
+Problem: a project fee of 60000 is split: 50% to the developer, 30% to the designer, rest to the manager. Print all three amounts using `const` for the fee and the percentages.
+Expected: `30000`, `18000`, `12000`.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+const fee = 60000;
+const DEV_SHARE = 50;
+const DESIGN_SHARE = 30;
+const MANAGER_SHARE = 100 - DEV_SHARE - DESIGN_SHARE;
+
+const devAmount = fee * DEV_SHARE / 100;
+const designAmount = fee * DESIGN_SHARE / 100;
+const managerAmount = fee * MANAGER_SHARE / 100;
+
+console.log(devAmount, designAmount, managerAmount);
+```
+Follow-up: "Why compute the manager's share instead of writing 20?" → single source of truth; changing one percentage keeps the total at 100.
+
+**P6 — Rotate three values**
+Problem: `a = 1, b = 2, c = 3` → after rotation `a = 2, b = 3, c = 1`.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+let a = 1, b = 2, c = 3;
+let temp = a;   // 1
+a = b;          // 2
+b = c;          // 3
+c = temp;       // 1
+console.log(a, b, c);   // 2 3 1
+```
+Explanation: same idea as swap, one more step. Trace with a table before coding.
+
+#### LEVEL 3 — Interview-Oriented
+
+**P7 — Explain every line's output**
+Problem: for each `console.log`, state the output (or error) and the one-line reason.
+```javascript
+console.log(x);       // 1
+var x = 5;
+let y = 10;
+{
+  var x = 6;
+  let y = 11;
+  console.log(x, y);  // 2
+}
+console.log(x, y);    // 3
+```
+
+TRY FIRST.
+
+SOLUTION
+1. `undefined`: `var x` hoisted, not yet assigned.
+2. `6 11`: `var x = 6` overwrote the global `x`; block `let y` shadows outer `y`.
+3. `6 10`: `x` was overwritten (var ignores blocks); outer `y` untouched.
+Follow-up: "Replace `var x` with `let x` on both lines. Now?" → line 1 throws ReferenceError (TDZ); nothing else runs.
+
+**P8 — Design the variables**
+Problem: a quiz app needs: the quiz title, the total number of questions (fixed at 10), the current question number (starts at 1, increases), the score (starts at 0, increases), and the pass mark (60%). Declare all variables with the best keyword and naming, then simulate answering two questions correctly and print `Question 3 of 10 - Score: 2`.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+const quizTitle = "JS Basics";
+const TOTAL_QUESTIONS = 10;
+const PASS_PERCENT = 60;
+let currentQuestion = 1;
+let score = 0;
+
+score = score + 1;  currentQuestion = currentQuestion + 1;   // answered Q1 correctly
+score = score + 1;  currentQuestion = currentQuestion + 1;   // answered Q2 correctly
+
+console.log("Question", currentQuestion, "of", TOTAL_QUESTIONS, "- Score:", score);
+```
+Explanation: two configuration constants, one fixed string, two pieces of changing state. Follow-up: "What would break if `score` were `const`?" → TypeError on the first `score = score + 1`.
+
+---
+
+### 11. PRACTICAL CODING EXERCISES
+
+1. **Keyword audit.** Write 8 variable declarations for a food-delivery app (restaurant name, delivery fee, cart total, item count, coupon code, is-open flag as text "yes"/"no", minimum order, app version). Justify `const` or `let` for each in a comment.
+2. **Scope experiment.** Write a global `let`, a block with a shadowing `let`, and a nested block that logs the variable. Predict, run, compare. Then change every `let` to `var` and repeat.
+3. **Reassignment chain.** Start `temperature = 20`; apply +5, -3, ×2, ÷2 as separate reassignments; log after each. Verify by hand before running.
+4. **Naming fix.** Rename these to good camelCase names and explain what each probably holds: `x1`, `TotalAMT`, `user_Name`, `IsLoggedIN`, `n`.
+5. **Hoisting demo.** Write the two-line `var` snippet and the two-line `let` snippet from 3.8 in one file, in that order, and observe that the file stops at the `let` error. Then reorder so both messages can be seen.
+
+---
+
+### 12. HOMEWORK
+
+#### A. CONCEPT QUESTIONS
+1. Explain declaration, initialization, reassignment and redeclaration with one line of code each.
+2. State three differences between `var` and `let`.
+3. What is block scope? Give an example where `let` and `var` behave differently.
+4. What is the Temporal Dead Zone and which keywords does it apply to?
+5. Why should `const` be the default choice? When do you use `let` instead?
+
+#### B. OUTPUT QUESTIONS
+1.
+```javascript
+let a = 3;
+{
+  let a = 4;
+}
+console.log(a);
+```
+2.
+```javascript
+var a = 3;
+{
+  var a = 4;
+}
+console.log(a);
+```
+3.
+```javascript
+let a = 3;
+{
+  a = 4;
+}
+console.log(a);
+```
+4.
+```javascript
+console.log(m);
+var m = 7;
+```
+5.
+```javascript
+const k = 2;
+console.log(k * 5);
+k = 3;
+console.log(k);
+```
+
+#### C. ERROR-FINDING
+1. `const speed;`
+2.
+```javascript
+let name = "A";
+let name = "B";
+```
+3. `let my-score = 10;`
+
+#### D. DEBUGGING
+1. Expected `Count: 2`, but the program throws an error instead. Explain the error and fix the code.
+```javascript
+let count = 0;
+{
+  let count = count + 1;
+}
+{
+  let count = count + 1;
+}
+console.log("Count:", count);
+```
+2. Expected `Welcome, Sara`, prints `Welcome, undefined`.
+```javascript
+console.log("Welcome, " + user);
+var user = "Sara";
+```
+
+#### E. CODING PROBLEMS
+1. **Basic:** declare a book title (fixed), price (fixed) and stock (changes). Sell two copies (two reassignments) and print the remaining stock.
+2. **Intermediate:** swap the values of `first = "Left"` and `second = "Right"` using a temporary variable, then print both.
+3. **Interview-oriented:** without running, write the output of each `console.log` with a one-line reason; then rewrite the code so it prints `1 2 3` using only `let`/`const` and blocks where appropriate.
+```javascript
+var n = 1;
+{
+  var n = 2;
+  console.log(n);
+}
+{
+  let n = 3;
+  console.log(n);
+}
+console.log(n);
+```
+
+---
+
+### 13. DAY-END REVISION
+
+□ A variable is a named container for a value
+□ `var`: function-scoped, redeclarable, hoisted as `undefined`
+□ `let`: block-scoped, reassignable, not redeclarable, TDZ
+□ `const`: block-scoped, not reassignable, must be initialized, TDZ
+□ Declaration vs initialization; `undefined` default
+□ Reassignment (`x = ...`) vs redeclaration (`let x = ...` again)
+□ Naming rules (letters, digits, `_`, `$`; no leading digit; case sensitive; no reserved words) and camelCase
+□ Global scope, block scope; inner sees outer, not vice versa
+□ Shadowing with `let` vs overwriting with `var`
+□ Hoisting and TDZ at awareness level
+□ Default `const`, `let` when reassigning, avoid `var`
+
+#### "Can You Explain This in an Interview?"
+
+1. Three differences between `var` and `let`.
+2. What prints: `let x = 1; { let x = 2; } console.log(x);` and why?
+3. What prints: `console.log(a); var a = 1;` and why?
+4. Why does `const x;` fail?
+5. Which keyword would you use for a shopping-cart item count, and why?
+
+---
+
+### 14. DAY-END ASSESSMENT
+
+**Concept (3)**
+1. Define scope and name the kinds of scope introduced today.
+2. What is the difference between reassignment and redeclaration? Which keywords allow each?
+3. Why does `let` throw an error before its declaration while `var` gives `undefined`?
+
+**Output (3)**
+4.
+```javascript
+let p = 5;
+{
+  let p = 6;
+  console.log(p);
+}
+console.log(p);
+```
+5.
+```javascript
+var q = 5;
+{
+  var q = 6;
+}
+console.log(q);
+```
+6.
+```javascript
+const r = 10;
+console.log(r + 1);
+r = r + 1;
+```
+
+**Debugging (2)**
+7. Fix so it prints `Level: 2`.
+```javascript
+const level = 1;
+level = level + 1;
+console.log("Level:", level);
+```
+8. Fix the naming errors: `let 3dModel = "cube"; let model name = "cube";`
+
+**Coding (2)**
+9. Given `x = 12` and `y = 30`, swap them using a temporary variable and print `x: 30, y: 12`.
+10. Declare variables for a bus: capacity (fixed 40), passengers (starts 0). Board 15, then 12, then 8 more; print remaining seats after each stop.
+
+**Interview (2)**
+11. Explain block scope to a beginner in three sentences with one example.
+12. "Is `const` immutable?" Give the precise answer.
+
+Assessment answers: 4 → `6` then `5`; 5 → `6`; 6 → `11` then TypeError; 7 → change `const` to `let`; 8 → `let threeDModel = "cube"; let modelName = "cube";`; 10 → `25`, `13`, `5`.
+
+---
+
