@@ -1,0 +1,856 @@
+# DAY 3 — DATA TYPES 
+## Primitive Types- (String, Number, Boolean, Undefined, Null, BigInt, Symbol) · Object - non primitive · typeof Dynamic Typing
+### 1. LEARNING OBJECTIVES
+By the end of Day 3 the learner should be able to:
+- Name all seven primitive types and the one non-primitive type, with an example of each
+- Use `typeof` and predict its result for every type, including the famous exceptions
+- Explain the difference between `undefined` and `null` at a basic level
+- Explain what dynamic typing means and demonstrate it
+- Explain why `typeof null` is `"object"` and why `typeof NaN` is `"number"`
+- Choose appropriate types when modelling real data (a user, a product)
+
+---
+
+### 2. TOPICS TO TEACH
+
+1. What is a data type? Why does it matter?
+2. Two families: primitives and objects
+3. String
+4. Number (integers, decimals, `Infinity`, `NaN` as a value of type number, precision)
+5. Boolean
+6. Undefined
+7. Null
+8. BigInt
+9. Symbol (awareness level)
+10. Object (introduction only; arrays as objects; deep dive Days 14–20)
+11. The `typeof` operator and its special cases
+12. Dynamic typing
+13. Primitive values are copied by value (contrast with objects: preview)
+
+---
+
+### 3. CONCEPT EXPLANATION
+
+#### 3.1 What is a data type?      5+3 => 8 , “5”+”3” => 5+3
+**Definition.** The kind of value a piece of data is: text, number, true/false, "nothing", etc.
+
+**Why it matters.** The type decides what operations make sense. `+` on two numbers adds; `+` on two strings joins. Most beginner bugs, and most Day 5 interview questions, come from not knowing the type of a value.
+
+**JavaScript has 8 types:** 7 primitives (String, Number, Boolean, Undefined, Null, BigInt, Symbol) and Object.
+
+**Primitive vs Object (for today).** A primitive is a single, immutable value: `5`, `"hi"`, `true`. An object is a collection of values (a product with name, price and stock). Primitives are copied by value (Day 1 Q11 showed this). Objects behave differently and are taught from Day 18.
+
+#### 3.2 String
+
+**Definition.** Text. Written inside single quotes, double quotes, or backticks (backticks/template literals are taught on Day 12).
+
+```javascript
+let a = "Hello";
+let b = 'Hello';
+let c = "It's fine";       // apostrophe inside double quotes: OK
+let d = 'She said "Hi"';   // double quotes inside single: OK
+let e = 'It\'s fine';      // escaping with backslash
+let f = "";                // empty string: valid, length 0
+console.log(typeof a);     // "string"
+```
+
+**Important points.**
+- Numbers in quotes are strings: `"25"` is text, not the number 25. `typeof "25"` → `"string"`.
+- `"" ` (empty string) is a real string value, not nothing.
+- Escape sequences: `\n` new line, `\t` tab, `\"` quote, `\\` backslash.
+
+**Common mistakes.** Mixing quote styles: `"Hello'` → SyntaxError. Forgetting that `"5"` is not `5`.
+
+**Interview angle.** "What is the type of `"25"`?" → string. "Are strings mutable?" → No, primitives are immutable; string methods (Day 11) return new strings.
+
+#### 3.3 Number
+
+**Definition.** All numbers, integer or decimal, positive or negative, are one type: `number` (64-bit floating point).
+
+```javascript
+let age = 25;
+let price = 99.99;
+let negative = -7;
+console.log(typeof age, typeof price, typeof negative);   // number number number
+```
+
+**Special numeric values.**
+
+```javascript
+console.log(1 / 0);          // Infinity
+console.log(-1 / 0);         // -Infinity
+console.log(typeof Infinity);// "number"
+console.log(0 / 0);          // NaN  (Not a Number)
+console.log(typeof NaN);     // "number"   ← interview favourite
+```
+
+`NaN` means "an operation that should give a number failed". It is *of type number* because the specification defines it as a numeric value. NaN's behaviour in comparisons is covered on Day 5.
+
+**Precision.**
+
+```javascript
+console.log(0.1 + 0.2);            // 0.30000000000000004
+console.log(0.1 + 0.2 === 0.3);    // false (=== is formally Day 4; result shown for awareness)
+```
+
+Why: binary floating point cannot represent 0.1 exactly, like decimal cannot represent 1/3 exactly. This is not a JavaScript bug; every language using IEEE-754 floats does this. Fix strategies (rounding, working in integers) come with Number methods later.
+
+**Safe integer limit.** Numbers are exact up to `9007199254740991` (`Number.MAX_SAFE_INTEGER`). Beyond that, precision is lost, which is why BigInt exists.
+
+**Common mistakes.** Writing `1,000` (comma is not allowed; `1000` or `1_000`). Expecting `10 / 3` to give 3.
+
+**Interview angle.** "What is `typeof NaN`?" → `"number"`. "Why is `0.1 + 0.2 !== 0.3`?" → floating-point representation.
+
+#### 3.4 Boolean
+
+**Definition.** Exactly two values: `true` and `false`. Used for decisions (Day 6) and flags.
+
+```javascript
+let isLoggedIn = true;
+let hasPaid = false;
+console.log(typeof isLoggedIn);   // "boolean"
+```
+
+**Important points.**
+- Lowercase, no quotes. `"true"` is a string; `True` is a ReferenceError.
+- Convention: name booleans as questions: `isActive`, `hasAccess`, `canEdit`.
+
+#### 3.5 Undefined
+
+**Definition.** The value a variable holds when it has been declared but not assigned. Also what you get when something does not exist.
+
+```javascript
+let x;
+console.log(x);          // undefined
+console.log(typeof x);   // "undefined"
+```
+
+**Meaning.** "JavaScript has not been told a value yet." It is set *by the engine*, not usually by the programmer.
+
+#### 3.6 Null
+
+**Definition.** A deliberate value meaning "empty" or "no value", set *by the programmer*.
+
+```javascript
+let selectedItem = null;   // nothing selected yet, on purpose
+console.log(selectedItem);          // null
+console.log(typeof selectedItem);   // "object"   ← historic bug, interview favourite
+```
+
+**`undefined` vs `null` (basic version; deep comparison Day 5).**
+
+| | `undefined` | `null` |
+| Who sets it | Engine (default) | Programmer (intentional) |
+| Meaning | Not assigned yet | Intentionally empty |
+| `typeof` | `"undefined"` | `"object"` |
+
+**Why `typeof null` is `"object"`.** In the first JavaScript implementation, values carried a type tag; `null` was represented as the null pointer, whose tag was the same as objects (0). Fixing it would break existing websites, so it stays. Correct interview phrasing: "It is a long-standing bug in the language that is kept for backward compatibility; `null` is a primitive, not an object."
+
+#### 3.7 BigInt
+
+**Definition.** Integers of arbitrary size. Written with an `n` suffix.
+
+```javascript
+let big = 9007199254740993n;
+console.log(typeof big);        // "bigint"
+console.log(big + 1n);          // 9007199254740994n
+console.log(9007199254740993);  // 9007199254740992  ← plain number lost precision
+```
+
+**When it is used.** IDs, cryptography, financial calculations beyond the safe integer limit.
+
+**Important point.** You cannot mix BigInt and Number directly: `1n + 1` → TypeError: Cannot mix BigInt and other types. Convert first (Day 5).
+
+#### 3.8 Symbol (awareness level)
+
+**Definition.** A unique identifier, created with `Symbol()`. Two symbols are never equal, even with the same description.
+
+```javascript
+let id1 = Symbol("id"); 
+let id2 = Symbol("id");
+console.log(typeof id1);   // "symbol"
+console.log(id1 === id2);  // false  (shown for awareness)
+```
+
+**When it is used.** Unique object property keys that cannot clash. Rare in beginner code; interviewers may ask "name all primitive types", so it must be in the list.
+
+#### 3.9 Object (introduction only)
+
+**Definition.** A collection of key–value pairs. The only non-primitive type. Arrays and functions are also objects under the hood.
+
+```javascript
+let product = { name: "Pen", price: 20 };
+let list = [1, 2, 3];
+console.log(typeof product);   // "object"
+console.log(typeof list);      // "object"   ← arrays are objects
+```
+
+Today: recognise the syntax and the `typeof` result. Reading and changing properties starts Day 18; arrays Day 14.
+
+#### 3.10 The `typeof` operator
+
+**Definition.** An operator that returns a *string* naming the type of a value.
+
+```javascript
+console.log(typeof "hi");        // "string"
+console.log(typeof 42);          // "number"
+console.log(typeof true);        // "boolean"
+console.log(typeof undefined);   // "undefined"
+console.log(typeof null);        // "object"     (bug)
+console.log(typeof 10n);         // "bigint"
+console.log(typeof Symbol());    // "symbol"
+console.log(typeof {});          // "object"
+console.log(typeof []);          // "object"
+```
+
+**Important points.**
+- The result is always a string: `typeof typeof 42` → `"string"`.
+- Parentheses optional: `typeof x` and `typeof(x)` both work.
+- `typeof` on an *undeclared* variable does **not** throw; it returns `"undefined"`. This is the one safe way to check whether a name exists.
+
+```javascript
+console.log(typeof neverDeclared);   // "undefined"  (no error)
+console.log(neverDeclared);          // ReferenceError
+```
+
+- `typeof` cannot distinguish arrays, `null` and plain objects (all `"object"`). Better checks come later (`Array.isArray`, Day 17).
+
+**Interview angle.** `typeof` output-prediction questions are extremely common. Memorise the table and the two exceptions (`null`, arrays).
+
+#### 3.11 Dynamic typing
+
+**Definition.** The *type belongs to the value, not to the variable*. A variable can hold a number now and a string later. Types are checked at runtime, not before.
+
+```javascript
+let data = 42;
+console.log(typeof data);   // "number"
+data = "forty-two";
+console.log(typeof data);   // "string"
+data = true;
+console.log(typeof data);   // "boolean"
+```
+
+**Contrast.** In statically typed languages (Java, C#, TypeScript) you declare `int data` and it can never hold text. JavaScript trades that safety for flexibility.
+
+**Why it matters for interviews.** Dynamic typing is the root of coercion questions (Day 5): when types mix in an expression, JavaScript converts them automatically, sometimes surprisingly.
+
+**Common mistake.** Reusing one variable for unrelated values of different types. Legal, but confusing; keep a variable's meaning and type stable.
+
+---
+
+### 4. TEACHING EXAMPLES
+
+**Example 1 — Basic: one of each**
+
+```javascript
+let title = "JavaScript";   
+let year = 1995;            
+let isPopular = true;       
+let nothingYet;             
+let empty = null;          
+let bigId = 12345678901234567890n; 
+let key = Symbol("key");    
+let info = { name: "JS" };  
+
+console.log(typeof title, typeof year, typeof isPopular);
+console.log(typeof nothingYet, typeof empty);
+console.log(typeof bigId, typeof key, typeof info);
+```
+
+Output:
+```
+string number boolean
+undefined object
+bigint symbol object
+```
+
+**Example 2 — Slightly different: number vs numeric string**
+
+```javascript
+let a = 10;
+let b = "10";
+console.log(typeof a);
+console.log(typeof b);   
+console.log(a + a);      
+console.log(b + b);     
+```
+
+Teaching point: same characters on screen, different types, different behaviour of `+`.
+
+**Example 3 — Interview-oriented: the exceptions**
+
+```javascript
+console.log(typeof null);        // object
+console.log(typeof NaN);         // number
+console.log(typeof [1, 2]);      // object
+console.log(typeof typeof 1);    // string
+console.log(typeof undeclaredVar); // undefined
+```
+
+Teaching point: five lines that appear in interviews repeatedly. Each has a one-sentence reason (see 3.6, 3.3, 3.9, 3.10).
+
+**Example 4 — Practical scenario: modelling a user**
+
+```javascript
+const userName = "Priya";          // string
+const age = 29;                    // number
+const isVerified = false;          // boolean
+let lastLogin = null;              // null: never logged in yet (intentional)
+let nickname;                      // undefined: not collected yet
+const accountId = 98765432109876543210n; // bigint: too large for number
+
+console.log("Name:", userName, "| type:", typeof userName);
+console.log("Age:", age, "| type:", typeof age);
+console.log("Verified:", isVerified, "| type:", typeof isVerified);
+console.log("Last login:", lastLogin, "| type:", typeof lastLogin);
+console.log("Nickname:", nickname, "| type:", typeof nickname);
+console.log("Account:", accountId, "| type:", typeof accountId);
+```
+
+Teaching point: choosing types deliberately. `null` for "known to be empty", `undefined` for "not yet provided", BigInt for large IDs.
+
+---
+
+### 5. CODE WALKTHROUGH
+
+**Walkthrough of Example 2:**
+
+1. `let a = 10;` stores the number 10. Type is attached to the value.
+2. `let b = "10";` stores the two-character text `1`,`0`. Type string.
+3. `typeof a` → the engine inspects the value 10 → returns the string `"number"`.
+4. `typeof b` → inspects `"10"` → `"string"`.
+5. `a + a` → both operands numbers → arithmetic → 20.
+6. `b + b` → both operands strings → concatenation → `"1010"`.
+
+State out loud: **"`+` looks at the types of its operands before deciding what to do."** This sentence is the bridge to Day 5.
+
+**Walkthrough of `typeof typeof 1`:** evaluate inner first: `typeof 1` → `"number"` (a string). Then `typeof "number"` → `"string"`.
+
+---
+
+### 6. OUTPUT-BASED QUESTIONS
+
+#### LEVEL 1 — Basic
+
+**Q1** `console.log(typeof "hello");` → `string`.
+**Q2** `console.log(typeof 3.14);` → `number`. Explanation: decimals are also type number.
+**Q3** `console.log(typeof false);` → `boolean`.
+**Q4**
+```javascript
+let z;
+console.log(typeof z);
+```
+→ `undefined`. Explanation: declared, not initialized.
+**Q5** `console.log(typeof "100");` → `string`. Explanation: quotes make it text.
+
+#### LEVEL 2 — Intermediate
+
+**Q6** `console.log(typeof null);` → `object`. Explanation: historical bug kept for compatibility.
+**Q7** `console.log(typeof NaN);` → `number`. Explanation: NaN is a special numeric value.
+**Q8** `console.log(typeof 25n);` → `bigint`.
+**Q9**
+```javascript
+let v = 5;
+v = "five";
+console.log(typeof v);
+```
+→ `string`. Explanation: dynamic typing; the type follows the current value.
+**Q10**
+```javascript
+console.log(typeof [10, 20]);
+console.log(typeof { a: 1 });
+```
+→ `object` twice. Explanation: arrays are objects; `typeof` cannot tell them apart.
+
+#### LEVEL 3 — Interview Thinking
+
+**Q11** `console.log(typeof typeof 99);` → `string`. Explanation: `typeof 99` is the string `"number"`; the type of a string is `"string"`.
+**Q12**
+```javascript
+console.log(typeof ghost);
+console.log(ghost);
+```
+→ `undefined`, then `ReferenceError: ghost is not defined`. Explanation: `typeof` on an undeclared name is safe; direct access is not.
+**Q13**
+```javascript
+let a = "5";
+let b = 5;
+console.log(typeof a + typeof b);
+```
+→ `stringnumber`. Explanation: both `typeof` results are strings; `+` joins them. Precedence: `typeof` binds tighter than `+`.
+**Q14** `console.log(1 / 0, -1 / 0, 0 / 0);` → `Infinity -Infinity NaN`. Explanation: division by zero gives infinities; 0/0 is undefined mathematically → NaN.
+**Q15**
+```javascript
+let n = null;
+let u;
+console.log(n, typeof n);
+console.log(u, typeof u);
+```
+→ `null object` then `undefined undefined`. Explanation: the *value* `null` prints as `null` but its `typeof` is `"object"`; `undefined` is consistent.
+
+---
+
+### 7. ERROR-FINDING QUESTIONS
+
+**E1**
+```javascript
+let flag = True;
+```
+Error: `ReferenceError: True is not defined` (runtime). Why: booleans are lowercase; `True` is treated as a variable name.
+Corrected: `let flag = true;`
+
+**E2**
+```javascript
+let greeting = "Hello';
+```
+Error: SyntaxError: mismatched quotes.
+Corrected: `let greeting = "Hello";`
+
+**E3**
+```javascript
+let total = 1n + 2;
+```
+Error: `TypeError: Cannot mix BigInt and other types`. Why: BigInt and Number cannot be combined without conversion.
+Corrected: `let total = 1n + 2n;`
+
+**E4**
+```javascript
+let population = 1,400,000;
+```
+Error: SyntaxError. Why: commas are not digit separators; `let a = 1, 400, 000` is parsed as a list of declarations.
+Corrected: `let population = 1400000;` or `1_400_000`.
+
+**E5**
+```javascript
+let count = "5";
+let doubled = count + count;
+console.log(doubled);   // expected 10
+```
+No error; output `55`. **Type-related logical error**: `count` is a string, so `+` concatenates. Fix: store it as a number.
+Corrected:
+```javascript
+let count = 5;
+let doubled = count + count;   // 10
+```
+
+**E6**
+```javascript
+let a = 10;
+console.log(typeof(a) === number);
+```
+Error: `ReferenceError: number is not defined`. Why: `typeof` returns a *string*; the comparison must be against the string `"number"`.
+Corrected: `console.log(typeof a === "number");   // true`
+
+---
+
+### 8. DEBUGGING PRACTICE
+
+#### DEBUGGING PROBLEM 1
+
+Problem: a form stores an age and computes the age next year.
+
+```javascript
+let age = "30";
+let nextYear = age + 1;
+console.log("Next year:", nextYear);
+```
+
+Expected: `Next year: 31`.
+Task: find and fix.
+
+**Solution.** Output is `Next year: 301` because `age` is a string. Fix by storing a number (input conversion is Day 5; today the fix is the literal).
+```javascript
+let age = 30;
+let nextYear = age + 1;   // 31
+```
+Reasoning: whenever `+` gives a "glued" result, print `typeof` of each operand. Systematic check: `console.log(typeof age)` → `"string"` → found.
+
+#### DEBUGGING PROBLEM 2
+
+Problem: the program should report whether a variable was ever assigned, distinguishing "never assigned" from "deliberately empty".
+
+```javascript
+let middleName;
+let spouseName = null;
+console.log("Middle name type:", typeof middleName);
+console.log("Spouse name type:", typeof spouseName);
+console.log("Spouse is object:", typeof spouseName === "object");
+```
+
+Expected: the third line should clearly indicate that `spouseName` is *empty*, not an object.
+Task: explain why the output is misleading and rewrite the check.
+
+**Solution.** `typeof null` is `"object"`, so the third line prints `true`, wrongly suggesting an object. Compare the value directly instead of its type.
+```javascript
+console.log("Spouse is empty:", spouseName === null);   // true
+```
+Reasoning: `typeof` is unreliable for `null`; check `=== null` (strict equality is formally Day 4; introduce it here as the correct tool and revisit).
+
+#### DEBUGGING PROBLEM 3
+
+Problem: a large order ID is printed incorrectly.
+
+```javascript
+let orderId = 123456789012345678901;
+console.log("Order:", orderId);
+```
+
+Expected: `Order: 123456789012345678901`.
+Task: find and fix.
+
+**Solution.** Output is `Order: 123456789012345680000` (precision lost beyond the safe integer range). Use BigInt.
+```javascript
+let orderId = 123456789012345678901n;
+console.log("Order:", orderId);   // 123456789012345678901n
+```
+Reasoning: when large integers "change on their own", suspect the 2^53 limit. Note the console shows the `n` suffix.
+
+---
+
+### 9. INTERVIEW QUESTIONS
+
+#### BASIC INTERVIEW QUESTIONS
+
+**1. What are the data types in JavaScript?**
+Seven primitives: String, Number, Boolean, Undefined, Null, BigInt, Symbol; and one non-primitive: Object (which includes arrays and functions).
+
+**2. What is the difference between primitive and non-primitive types?**
+Primitives are single immutable values copied by value. Objects are collections of values, copied by reference (behaviour covered in a later session).
+
+**3. What does `typeof` do?**
+It returns a string describing the type of a value, e.g. `typeof 5` is `"number"`.
+
+**4. What is the difference between `undefined` and `null`?**
+`undefined` means a variable has been declared but not assigned; the engine sets it. `null` is an intentional "no value" set by the programmer. `typeof undefined` is `"undefined"`; `typeof null` is `"object"` due to a historical bug.
+
+**5. What is dynamic typing?**
+The type is associated with the value, not the variable, and is determined at runtime. The same variable can hold a number and later a string.
+
+#### INTERMEDIATE INTERVIEW QUESTIONS
+
+**6. Why is `typeof null` `"object"`?**
+A bug from the first implementation: `null` was represented with the same internal tag as objects. It was never fixed because it would break existing code. `null` is a primitive.
+
+**7. What is `NaN` and what is its type?**
+`NaN` (Not-a-Number) is the result of a failed numeric operation such as `0 / 0`. Its type is `"number"` because the specification defines it as a numeric value.
+
+**8. Why does `0.1 + 0.2` not equal `0.3`?**
+Numbers are IEEE-754 double-precision floats; 0.1 and 0.2 cannot be represented exactly in binary, so the sum is `0.30000000000000004`. Every language using floats has this behaviour.
+
+**9. What is BigInt and when would you use it?**
+An integer type of arbitrary size, written with an `n` suffix. Used when values exceed `Number.MAX_SAFE_INTEGER` (about 9 × 10^15), such as large IDs or precise financial arithmetic. It cannot be mixed with Number without conversion.
+
+**10. What does `typeof []` return, and how would you detect an array?**
+`"object"`. `typeof` cannot distinguish arrays; use `Array.isArray(value)` (covered with arrays).
+
+#### SCENARIO-BASED INTERVIEW QUESTIONS
+
+**11.** "A user's age from a form is being added to 1 and shows `251` instead of `26`. Diagnose."
+The age is a string (form inputs are strings), so `+` concatenated. Check with `typeof`; convert to a number before adding.
+
+**12.** "Your code checks `typeof value === 'object'` to detect objects, but it also passes for a `null` value and crashes. Why, and what is the fix?"
+`typeof null` is `"object"`. Add an explicit `value !== null` check alongside the `typeof` check.
+
+**13.** "You store `12345678901234567890` from an API and it prints a different number. What happened?"
+It exceeded the safe integer range and lost precision. Use BigInt or keep it as a string if it is only an identifier.
+
+#### FOLLOW-UP QUESTIONS
+
+Interviewer: "List the primitive types."
+Follow-up: "Is `null` a primitive or an object?" → Primitive; `typeof` is wrong.
+Follow-up: "Is an array a primitive?" → No; it is an object.
+
+Interviewer: "What is dynamic typing?"
+Follow-up: "Is that good or bad?" → Flexible and fast to write, but it allows type mistakes to reach runtime; TypeScript exists to add static checking on top.
+Follow-up: "How would you check the type of a value at runtime?" → `typeof` for primitives; `Array.isArray` for arrays; `=== null` for null.
+
+Interviewer: "What is `typeof NaN`?"
+Follow-up: "How can you check whether a value is NaN?" → `Number.isNaN(value)` (Day 5), because `NaN === NaN` is false.
+
+---
+
+### 10. INTERVIEW-FOCUSED CODING PROBLEMS
+
+#### LEVEL 1 — Easy
+
+**P1 — Type report**
+Problem: declare six variables of six different types and print `value -> type` for each, one per line.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+let s = "text", n = 7, b = true, u, nl = null, bi = 7n;
+console.log(s, "->", typeof s);
+console.log(n, "->", typeof n);
+console.log(b, "->", typeof b);
+console.log(u, "->", typeof u);
+console.log(nl, "->", typeof nl);
+console.log(bi, "->", typeof bi);
+```
+Follow-up: "Which line surprised you?" → `null -> object`.
+
+**P2 — Same characters, different types**
+Problem: create `x = 7` and `y = "7"`. Print `x + x`, `y + y`, and both types. Explain the two outputs in a comment.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+let x = 7;
+let y = "7";
+console.log(x + x, typeof x);   // 14 number   → arithmetic
+console.log(y + y, typeof y);   // 77 string   → concatenation
+```
+
+**P3 — Intentional emptiness**
+Problem: model a delivery: `address` (known), `deliveryTime` (not yet scheduled: intentionally empty), `notes` (not provided). Print each with its type and one comment explaining the choice of `null` vs `undefined`.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+const address = "12, Park Street";
+let deliveryTime = null;   // decided: no time assigned yet
+let notes;                 // simply not provided
+console.log(address, typeof address);
+console.log(deliveryTime, typeof deliveryTime);   // null object
+console.log(notes, typeof notes);                 // undefined undefined
+```
+
+#### LEVEL 2 — Intermediate
+
+**P4 — Predict the typeof chain**
+Problem: for each line, write the output before running.
+```javascript
+console.log(typeof typeof true);
+console.log(typeof (1 / 0));
+console.log(typeof (0 / 0));
+console.log(typeof "" );
+console.log(typeof (typeof missing));
+```
+
+TRY FIRST.
+
+SOLUTION
+`string`, `number`, `number`, `string`, `string`. Explanation: `typeof` always returns a string; `Infinity` and `NaN` are numbers; `""` is a string; `typeof missing` is `"undefined"` (a string) so its type is `"string"`.
+
+**P5 — Fix the types**
+Problem: correct the types so the arithmetic and labels work as intended; explain each change.
+```javascript
+let quantity = "4";
+let unitPrice = "250";
+let inStock = "true";
+let subtotal = quantity * unitPrice;
+console.log("Subtotal:", subtotal, "| In stock:", inStock, typeof inStock);
+```
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+let quantity = 4;
+let unitPrice = 250;
+let inStock = true;
+let subtotal = quantity * unitPrice;   // 1000
+console.log("Subtotal:", subtotal, "| In stock:", inStock, typeof inStock);
+```
+Note: `"4" * "250"` actually gives `1000` because `*` forces numeric conversion (Day 5), so the original *appears* to work; the danger is elsewhere (`+` would concatenate). Storing the correct type avoids depending on hidden conversions. `"true"` is a string and would behave incorrectly in conditions (Day 5–6).
+
+**P6 — Precision check**
+Problem: print `0.1 + 0.2`, then print the same sum computed in "paise" (integers) and converted back, to show a workaround.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+console.log(0.1 + 0.2);            // 0.30000000000000004
+let paise = 10 + 20;               // work in integers
+console.log(paise / 100);          // 0.3
+```
+Explanation: integer arithmetic is exact within the safe range; divide once at the end. Follow-up: "Any built-in way to round?" → `toFixed` (Number methods, later).
+
+#### LEVEL 3 — Interview-Oriented
+
+**P7 — Type detective**
+Problem: without running, state the output of every line and name the rule.
+```javascript
+let a;
+let b = null;
+let c = "null";
+let d = undefined;
+console.log(typeof a, typeof b, typeof c, typeof d);
+console.log(a, b, c, d);
+console.log(typeof a === typeof d);
+console.log(typeof b === typeof c);
+```
+
+TRY FIRST.
+
+SOLUTION
+Line 1: `undefined object string undefined`.
+Line 2: `undefined null null undefined` (note: `c` prints the *text* null).
+Line 3: `true` (both `"undefined"`).
+Line 4: `false` (`"object"` vs `"string"`).
+Rules: declared-not-assigned → undefined; `null` literal → typeof object; quoted → string.
+
+**P8 — Model a product with deliberate types**
+Problem: a product has: SKU (text like "SKU-1001"), price (decimal), stock (integer), isDiscontinued (flag), discount (not yet decided: intentionally empty), supplierId (20-digit integer). Declare each with the best keyword and type, then print a one-line summary and a second line listing the six `typeof` results. Justify BigInt.
+
+TRY FIRST.
+
+SOLUTION
+```javascript
+const sku = "SKU-1001";
+const price = 499.5;
+let stock = 120;
+let isDiscontinued = false;
+let discount = null;
+const supplierId = 12345678901234567890n;
+
+console.log(sku, price, stock, isDiscontinued, discount, supplierId);
+console.log(typeof sku, typeof price, typeof stock, typeof isDiscontinued, typeof discount, typeof supplierId);
+// string number number boolean object bigint
+```
+Justification: 20 digits exceed the safe integer range, so a plain number would silently change; BigInt preserves it. Follow-up: "Could supplierId be a string instead?" → Yes, if no arithmetic is needed; a string is often simpler for identifiers.
+
+---
+
+### 11. PRACTICAL CODING EXERCISES
+
+1. **Type table.** Build a small program that prints a table (with `console.log`, one row per line) of ten literal values and their `typeof`, including `null`, `NaN`, `[]`, `{}`, `10n`.
+2. **String quoting.** Store these four sentences correctly: `It's raining`, `She said "go"`, `Path: C:\temp`, `Line1` then a new line then `Line2`. Print each.
+3. **Dynamic typing trace.** Assign five values of different types to one variable in sequence, logging `typeof` after each. Then rewrite with five separate `const` variables and explain in a comment why the second version is clearer.
+4. **Safe integer edge.** Print `9007199254740991 + 1` and `9007199254740991 + 2`. Explain the result. Repeat with BigInt.
+5. **Null vs undefined story.** Write 4 variables for a job application (name, email, phone, referral) where two are intentionally empty and one was never filled. Choose `null`/`undefined` deliberately and comment why.
+
+---
+
+### 12. HOMEWORK
+
+#### A. CONCEPT QUESTIONS
+1. List the seven primitive types with one example literal each.
+2. What is the difference between `undefined` and `null`? Who sets each?
+3. Why does `typeof null` return `"object"`?
+4. What is dynamic typing? Give a three-line example.
+5. What is `NaN`, what is its type, and give one operation that produces it.
+
+#### B. OUTPUT QUESTIONS
+1. `console.log(typeof "42", typeof 42, typeof 42n);`
+2.
+```javascript
+let v = true;
+v = "true";
+console.log(typeof v);
+```
+3. `console.log(typeof null, typeof undefined);`
+4. `console.log(typeof typeof "x");`
+5.
+```javascript
+console.log(typeof notDeclaredAnywhere);
+console.log(10 / 0);
+```
+
+#### C. ERROR-FINDING
+1. `let ok = FALSE;`
+2. `let sum = 5n + 5;`
+3.
+```javascript
+let n = 10;
+console.log(typeof n === number);
+```
+
+#### D. DEBUGGING
+1. Expected `Total: 30`, prints `Total: 1020`.
+```javascript
+let a = "10";
+let b = 20;
+console.log("Total:", a + b);
+```
+2. Expected the check to be `true` only for real objects, but it prints `true` for the null value.
+```javascript
+let config = null;
+console.log(typeof config === "object");
+```
+
+#### E. CODING PROBLEMS
+1. **Basic:** declare a variable of each of the 7 primitive types and print `typeof` for each on one line.
+2. **Intermediate:** model a movie ticket booking: movie (text), seats (integer), pricePerSeat (decimal), isPremium (flag), promoCode (intentionally empty), bookingRef (18-digit integer). Print the total cost and the six types.
+3. **Interview-oriented:** without running, write the output of each line, then run and compare:
+```javascript
+let p = "3";
+let q = 3;
+console.log(p + q);
+console.log(q + q);
+console.log(typeof (p + q));
+console.log(typeof (q + q));
+console.log(typeof null === typeof {});
+```
+
+---
+
+### 13. DAY-END REVISION
+
+□ 7 primitives + Object
+□ String: quotes, escaping, `"25"` is text
+□ Number: one type for all numbers; `Infinity`, `NaN` (type number), `0.1 + 0.2`
+□ Boolean: `true`/`false`, lowercase
+□ `undefined`: engine's default; `null`: programmer's intentional empty
+□ BigInt: `n` suffix, cannot mix with Number
+□ Symbol: unique identifier (awareness)
+□ Object: `{}` and `[]` both `"object"`
+□ `typeof` returns a string; exceptions: `null` → `"object"`, arrays → `"object"`
+□ `typeof undeclaredName` is safe (`"undefined"`)
+□ Dynamic typing: type lives in the value
+
+#### "Can You Explain This in an Interview?"
+
+1. Name all data types in JavaScript.
+2. Why is `typeof null` `"object"`?
+3. What is the difference between `null` and `undefined`?
+4. What is `typeof NaN` and why?
+5. What is dynamic typing? Give an example.
+
+---
+
+### 14. DAY-END ASSESSMENT
+
+**Concept (3)**
+1. Which types are primitive? Which is not?
+2. Explain dynamic typing in two sentences.
+3. When would you choose BigInt over Number?
+
+**Output (3)**
+4. `console.log(typeof 0, typeof "0", typeof null);`
+5.
+```javascript
+let w;
+console.log(w, typeof w);
+```
+6. `console.log(typeof (5 / 0), typeof (0 / 0));`
+
+**Debugging (2)**
+7. Expected `Age next year: 21`, prints `Age next year: 201`. Fix.
+```javascript
+let age = "20";
+console.log("Age next year:", age + 1);
+```
+8. Expected `true`. Fix.
+```javascript
+let text = "hello";
+console.log(typeof text === string);
+```
+
+**Coding (2)**
+9. Declare a variable, assign it a number, then a string, then a boolean, logging `typeof` after each.
+10. Store a 19-digit invoice number so it prints exactly; print it and its type.
+
+**Interview (2)**
+11. "Is `null` an object?" Answer precisely.
+12. Explain why `"5" + "5"` and `5 + 5` differ, using the word *type*.
+
+Assessment answers: 4 → `number string object`; 5 → `undefined undefined`; 6 → `number number`; 7 → `let age = 20;`; 8 → `"string"` in quotes; 10 → BigInt literal with `n`, type `bigint`.
+
+---
+---
+
