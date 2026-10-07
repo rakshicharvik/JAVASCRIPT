@@ -1,0 +1,424 @@
+DAY 4 — OPERATORS
+Arithmetic · Assignment · Comparison · Logical · Increment/Decrement · Ternary
+
+1. LEARNING OBJECTIVES
+By the end of Day 4 the learner should be able to:
+Use every arithmetic operator, including % and **, and explain what % is for
+Use compound assignment (+=, -=, *=, /=, %=) and trace its effect
+Use comparison operators and predict their boolean result, using ===/!== by default
+Use &&, ||, ! with boolean values and build compound conditions
+Explain and trace the difference between x++ and ++x
+Write a ternary expression and read it aloud as "condition ? ifTrue : ifFalse"
+Apply operator precedence and use parentheses deliberately
+(Type coercion, == vs === in depth, truthy/falsy and short-circuit with non-boolean values are Day 5. Today, comparisons and logical operators are used with values of the same type and with real booleans.)
+
+2. TOPICS:
+What is an operator? Operands, unary vs binary vs ternary
+Arithmetic: + - * / % **
+Assignment: = and compound += -= *= /= %= **=
+Comparison: > < >= <= === !== (and == != introduced, deep dive Day 5)
+Logical: && || ! with booleans
+Increment/decrement: ++ --, prefix vs postfix
+Ternary (conditional) operator ? :
+Operator precedence and associativity; parentheses
+Expressions vs statements; every expression produces a value
+
+3. CONCEPT EXPLANATION
+3.1 What is an operator?
+Definition. A symbol that performs an operation on one or more values (operands) and produces a result.
+Unary: one operand: -x, !flag, typeof x, x++
+Binary: two operands: a + b, a > b
+Ternary: three operands: cond ? a : b (the only one)
+Expression. Any piece of code that produces a value: 5, a + b, a > b, x = 10 (yes, assignment is an expression producing the assigned value). Output prediction is largely "evaluate the expression, then print the value".
+3.2 Arithmetic operators
+Operator	Name	Example	Result
++	Addition	7 + 2	9
+-	Subtraction	7 - 2	5
+*	Multiplication	7 * 2	14
+/	Division	7 / 2	3.5
+%	Remainder (modulo)	7 % 2	1
+**	Exponentiation	7 ** 2	49
+Remainder %, the most interview-relevant. a % b is what is left after dividing a by b as many whole times as possible.
+javascript
+console.log(10 % 3);   // 1   (3 goes in 3 times = 9, remainder 1)console.log(10 % 5);   // 0   (divides exactly)console.log(3 % 10);   // 3   (10 goes in 0 times, remainder 3)console.log(-7 % 3);   // -1  (sign follows the left operand)console.log(7.5 % 2);  // 1.5 (works with decimals)
+Why % matters. Even/odd (n % 2 === 0), divisibility (n % 5 === 0), extracting the last digit (n % 10), cycling through positions (i % length), time conversions (seconds % 60). Five of the nine Day 7 classic problems use it.
+Division. Always produces a decimal when needed; no integer division. 7 / 2 is 3.5. Integer part: Math.floor(7 / 2) → 3 (introduce Math.floor as a supporting tool; needed for reverse-number on Day 7).
+javascript
+console.log(Math.floor(7 / 2));   // 3console.log(Math.floor(-7 / 2));  // -4  (rounds down, toward -∞)
++ with strings. Joins them (Day 1). Mixed string + number is coercion (Day 5). Today: keep + operands the same type.
+Unary minus / plus. -x negates. +x converts to a number (Day 5).
+Common mistakes. Expecting % to be "percentage"; using ^ for power (^ is bitwise XOR: 2 ^ 3 is 1, not 8); forgetting operator precedence.
+3.3 Assignment operators
+= stores the right value in the left variable. Compound forms do the operation then store.
+javascript
+let x = 10;x += 5;    // x = x + 5   → 15x -= 3;    // x = x - 3   → 12x *= 2;    // x = x * 2   → 24x /= 4;    // x = x / 4   → 6x %= 4;    // x = x % 4   → 2x **= 3;   // x = x ** 3  → 8console.log(x);   // 8
+Important points.
+Assignment is an expression: let a; let b = (a = 5); sets both to 5. Rarely good style, but appears in output questions.
+= is assignment; === is comparison. Writing = where you meant === is the classic bug of Day 6.
+Compound assignment evaluates the right side fully first: x *= 2 + 3 means x = x * (2 + 3), not x * 2 + 3.
+
+
+
+
+3.4 Comparison operators
+Every comparison produces a boolean.
+Operator	Meaning	5 ? 3
+ >	greater than	true
+<	less than	false
+>=	greater or equal	true
+<=	less or equal	false
+===	strictly equal (same type and value)	false
+!==	strictly not equal	true
+==	loosely equal (converts types first)	Day 5
+!=	loosely not equal	Day 5
+javascript
+console.log(5 === 5);       // trueconsole.log(5 === "5");     // false  (different types)console.log("a" === "a");   // trueconsole.log(5 !== 4);       // trueconsole.log(10 >= 10);      // true
+Rule for this course. Always use === and !==. == performs type conversion before comparing, which is the subject of Day 5; until then it is only mentioned.
+Chained comparison does not work. 1 < x < 10 does not mean "x between 1 and 10". It evaluates (1 < x) to a boolean first, and then compares that boolean to 10 (Day 5 explains the conversion). Write x > 1 && x < 10.
+Comparing strings. "apple" < "banana" is true: strings compare character by character by Unicode value. "Zebra" < "apple" is true because uppercase letters come before lowercase. "10" < "9" is true (string comparison, "1" < "9"), a classic trap.
+Interview angle. "Difference between == and ===?" is asked in almost every JavaScript interview; today give the one-line answer ("=== checks type and value without conversion; == converts first") and promise the full picture tomorrow.
+
+
+
+3.5 Logical operators (with booleans)
+Operator	Name	Result
+&&	AND	true only if both are true
+||	OR	true if at least one is true
+!	NOT	flips true ↔ false
+javascript
+let isAdult = true;let hasTicket = false;console.log(isAdult && hasTicket);   // falseconsole.log(isAdult || hasTicket);   // trueconsole.log(!isAdult);               // falseconsole.log(!hasTicket);             // true
+Truth tables (teach once, test often).
+A	B	A && B	A || B
+true	true	true	true
+true	false	false	true
+false	true	false	true
+false	false	false	false
+Combining with comparisons.
+javascript
+let age = 25;let hasId = true;console.log(age >= 18 && hasId);            // trueconsole.log(age < 18 || age > 60);          // falseconsole.log(!(age >= 18));                  // false
+Short-circuit evaluation (boolean version). && stops at the first false; || stops at the first true. With booleans this only affects performance; with non-boolean values it changes the result (Day 5).
+Common mistakes. Writing age >= 18 && <= 60 (missing left operand → SyntaxError); confusing && with || in "between" checks; !a === b is (!a) === b, not !(a === b).
+3.6 Increment and decrement
+x++ and x-- add/subtract 1. The position matters when the expression's value is used.
+javascript
+let a = 5;let b = a++;   // postfix: b gets the OLD value (5), then a becomes 6console.log(a, b);   // 6 5let c = 5;let d = ++c;   // prefix: c becomes 6 FIRST, then d gets the NEW value (6)console.log(c, d);   // 6 6
+Rule. Postfix x++: use, then increment. Prefix ++x: increment, then use. As a standalone statement (x++;), both do the same thing.
+Interview angle. let i = 1; console.log(i++ + ++i); is a common trick question (answer in Section 6). Advice to give: in real code, write x++ only as a standalone statement; never embed it in a larger expression.
+3.7 Ternary operator
+Definition. condition ? valueIfTrue : valueIfFalse. A compact expression that chooses between two values.
+javascript
+let age = 20;let status = age >= 18 ? "adult" : "minor";console.log(status);   // adult
+Read it aloud. "Is age at least 18? If yes, adult; otherwise minor."    
+When to use. Choosing a value. For executing different actions, use if (Day 6). Nested ternaries are legal but hard to read; limit to one level in this course.
+javascript
+let marks = 72;let grade = marks >= 90 ? "A" : marks >= 75 ? "B" : "C";   // nested: read right-to-left carefullyconsole.log(grade);   // C
+Common mistakes. Forgetting the : branch (SyntaxError); using it for side effects; misreading nested ternaries.
+3.8 Operator precedence and associativity
+When several operators appear, precedence decides which runs first; associativity decides direction for equal precedence.
+Simplified order (high → low) for Phase 1:
+Grouping ( )
+Postfix x++ x--
+Unary ! - + typeof and prefix ++x --x
+Exponent ** (right-to-left)
+* / %
++ -
+< <= > >=
+=== !== == !=
+&&
+||
+Ternary ? : (right-to-left)
+Assignment = += -= ... (right-to-left)
+javascript
+console.log(2 + 3 * 4);        
+console.log((2 + 3) * 4); 
+
+     // 20console.log(2 ** 3 ** 2);      // 512  (3 ** 2 = 9 first, then 2 ** 9)console.log(10 - 4 - 3);       // 3    (left-to-right)console.log(5 > 3 && 2 > 1);   // true (comparisons before &&)console.log(!true || true);    // true (! first, then ||)
+Rule for readable code. Use parentheses whenever two different operator families mix, even if not strictly needed. It costs nothing and removes doubt for the reader and the interviewer.
+
+4. TEACHING EXAMPLES
+Example 1 — Basic: arithmetic report
+javascript
+let a = 17, b = 5;console.log(a + b, a - b, a * b);   // 22 12 85console.log(a / b);                 // 3.4console.log(a % b);                 // 2console.log(a ** 2);                // 289
+Example 2 — Slightly different: compound assignment as a running state
+javascript
+let fuel = 50;fuel -= 12;    // drove: 38fuel -= 8;     // drove: 30fuel += 20;    // refuelled: 50fuel *= 2;     // doubled tank (hypothetical): 100console.log(fuel);   // 100
+Example 3 — Interview-oriented: prefix vs postfix in expressions
+javascript
+let i = 1;let result = i++ + ++i;console.log(result, i);   // 4 3
+Walkthrough in Section 5.
+Example 4 — Practical scenario: ticket eligibility and price
+javascript
+const age = 16;const isStudent = true;const BASE_PRICE = 200;const isChild = age < 12;const isSenior = age >= 60;const getsDiscount = isChild || isSenior || isStudent;const price = getsDiscount ? BASE_PRICE / 2 : BASE_PRICE;console.log("Discount eligible:", getsDiscount);   // trueconsole.log("Price:", price);                      // 100
+Teaching point: break a complex condition into named booleans; the ternary then reads like English.
+
+5. CODE WALKTHROUGH
+Example 3: let i = 1; let result = i++ + ++i;
+Evaluate left to right:
+i++ → the expression's value is the current i = 1; then i becomes 2.
+++i → i becomes 3 first; the expression's value is 3.
+1 + 3 = 4 → stored in result.
+Final: result = 4, i = 3.
+x *= 2 + 3 with x = 4: right side 2 + 3 = 5 first → x = 4 * 5 = 20. Never 4 * 2 + 3 = 11.
+let marks = 72; marks >= 90 ? "A" : marks >= 75 ? "B" : "C": ternary is right-associative, so it groups as marks >= 90 ? "A" : (marks >= 75 ? "B" : "C"). 72 ≥ 90? No → evaluate inner. 72 ≥ 75? No → "C".
+
+6. OUTPUT-BASED QUESTIONS
+LEVEL 1 — Basic
+Q1 console.log(17 % 5); → 2. Remainder of 17 ÷ 5 (3 × 5 = 15, left 2). Q2 console.log(2 ** 4); → 16. Q3 console.log(7 > 3, 7 === 7, 7 !== 7); → true true false. Q4
+javascript
+let n = 10;n += 5;console.log(n);
+→ 15. Q5 console.log(true && false, true || false, !false); → false true true.
+LEVEL 2 — Intermediate
+Q6 console.log(10 % 3 * 2); → 2. % and * share precedence, left to right: 10 % 3 = 1, 1 * 2 = 2. Q7
+javascript
+let a = 4;let b = a++;console.log(a, b);
+→ 5 4. Postfix: b gets the old value. Q8
+javascript
+let a = 4;let b = ++a;console.log(a, b);
+→ 5 5. Prefix: increment first. Q9 console.log(5 === "5", 5 !== "5"); → false true. Different types; strict equality never converts. Q10
+javascript
+let score = 55;console.log(score >= 50 ? "Pass" : "Fail");
+→ Pass.
+LEVEL 3 — Interview Thinking
+Q11
+javascript
+let i = 1;console.log(i++ + ++i, i);
+→ 4 3. See walkthrough. Q12
+javascript
+let x = 3;x *= 2 + 1;console.log(x);
+→ 9. Right side first: 2 + 1 = 3, then 3 * 3. Q13 console.log(2 ** 3 ** 2); → 512. ** is right-associative: 2 ** (3 ** 2) = 2 ** 9. Q14 console.log("10" < "9", 10 < 9); → true false. String comparison is character by character ("1" < "9"); numeric comparison is by value. Q15
+javascript
+let a = 5, b = 10;let c = a > 3 && b > 3 ? "both" : "not both";let d = !(a > b) || b === 5;console.log(c, d);
+→ both true. c: comparisons → true && true → true → "both". d: a > b is false, !false is true; true || anything → true.
+
+7. ERROR-FINDING QUESTIONS
+E1
+javascript
+let n = 7;console.log(n % 2 = 1); 
+
+Error: SyntaxError: Invalid left-hand side in assignment. Why: = assigns; the left side n % 2 is not a variable. Intended comparison. Corrected: console.log(n % 2 === 1); // true
+E2
+javascript
+let age = 25;console.log(age >= 18 && <= 60);
+Error: SyntaxError: Unexpected token '<='. Why: each side of && must be a complete expression. Corrected: console.log(age >= 18 && age <= 60);
+E3
+javascript
+let power = 2 ^ 10;console.log(power);   // expected 1024
+No error; prints 8. Logical error: ^ is bitwise XOR, not exponent. Corrected: let power = 2 ** 10;
+E4
+javascript
+let score = 80;let result = score >= 50 ? "Pass";
+Error: SyntaxError: Unexpected token ';'. Why: the ternary requires both branches. Corrected: let result = score >= 50 ? "Pass" : "Fail";
+E5
+javascript
+let x = 10;let isBetween = 1 < x < 5;console.log(isBetween);   // expected false
+No error; prints true. Logical error: 1 < x is true; then true < 5 compares a converted boolean (1) with 5 → true. Corrected: let isBetween = x > 1 && x < 5; // false
+E6
+javascript
+let total = 100;total =+ 20;console.log(total);   // expected 120
+No error; prints 20. Logical error: =+ is assignment of +20 (unary plus), not +=. Corrected: total += 20;
+
+8. DEBUGGING PRACTICE
+DEBUGGING PROBLEM 1
+Problem: convert 185 minutes into hours and minutes and print 3 h 5 m.
+javascript
+let totalMinutes = 185;let hours = totalMinutes / 60;let minutes = totalMinutes - hours * 60;console.log(hours + " h " + minutes + " m");
+Expected: 3 h 5 m. Task: find and fix.
+Solution. hours is 3.0833... because / does not truncate; minutes then becomes 0. Use Math.floor for hours and % for minutes.
+javascript
+let hours = Math.floor(totalMinutes / 60);   // 3let minutes = totalMinutes % 60;             // 5
+Reasoning: when a "whole number" result has decimals, suspect /; when you need "what is left over", reach for %.
+DEBUGGING PROBLEM 2
+Problem: decide whether a user may enter a club: must be 21 or older and have a membership or be an invited guest.
+javascript
+let age = 25;let isMember = false;let isGuest = true;let canEnter = age >= 21 && isMember || isGuest;console.log(canEnter);
+Expected: true for this data; but with age = 17, isMember = false, isGuest = true it should be false (under-age guests are not allowed). Test both. Task: find the logic error and fix.
+Solution. && binds tighter than ||, so the expression is (age >= 21 && isMember) || isGuest, letting any guest in regardless of age. The intended rule is age and (member or guest).
+javascript
+let canEnter = age >= 21 && (isMember || isGuest);
+Reasoning: when a condition is "sometimes right", write the rule in English, mark the groupings, and add parentheses to match. Test with at least one case per branch.
+DEBUGGING PROBLEM 3
+Problem: count how many items were processed. Expected 3.
+javascript
+let count = 0;count++;count++;let final = count++;console.log(final);
+Expected: 3. Task: find and fix.
+Solution. final = count++ assigns the old value 2, then increments count to 3; final is 2.
+javascript
+let final = ++count;   // 3// or clearer:count++;let final = count;
+Reasoning: a value that is "one less than expected" after ++ points at postfix use inside an expression. Prefer standalone count++; statements.
+
+9. INTERVIEW QUESTIONS
+BASIC INTERVIEW QUESTIONS
+1. What does the % operator do? 
+
+Returns the remainder after division: 10 % 3 is 1. Commonly used for even/odd checks (n % 2 === 0), divisibility and extracting digits.
+2. What is the difference between = and ===? 
+
+= assigns a value to a variable. === compares two values for equality of type and value, returning a boolean.
+3. What is the difference between x++ and ++x? 
+
+
+Both increase x by 1. In a larger expression, x++ evaluates to the old value and then increments; ++x increments first and evaluates to the new value.
+4. What is the ternary operator? 
+
+A conditional expression condition ? a : b that evaluates to a if the condition is true, otherwise b. Used to choose between two values concisely.
+5. What do &&, || and ! do? 
+
+&& is true only if both operands are true; || if at least one is true; ! negates a boolean.
+INTERMEDIATE INTERVIEW QUESTIONS
+6. What is operator precedence? 
+
+Give an example where it matters. The order in which operators are evaluated. 2 + 3 * 4 is 14 because * has higher precedence than +; parentheses override it: (2 + 3) * 4 is 20.
+7. Why does 1 < x < 10 not check a range? 
+
+Comparisons are evaluated left to right: 1 < x becomes a boolean, which is then compared to 10 after conversion. Use x > 1 && x < 10.
+8. Is ** left- or right-associative? 
+
+What is 2 ** 3 ** 2? Right-associative: 2 ** (3 ** 2) = 2 ** 9 = 512.
+9. How do strings compare with < and >?
+
+ Character by character using Unicode code units. So "apple" < "banana" is true, "Z" < "a" is true (uppercase first), and "10" < "9" is true because "1" < "9".
+10. What is short-circuit evaluation? 
+
+&& stops evaluating at the first falsy operand and || at the first truthy operand, returning that operand. With booleans it is just an optimisation; with other values it returns the operand itself, which is used for defaults (covered with coercion).
+
+
+SCENARIO-BASED INTERVIEW QUESTIONS
+11. "A discount applies if the cart total is over 1000 or the user is premium, but only on weekdays. Write the condition." isWeekday && (total > 1000 || isPremium). Emphasise the parentheses: without them && binds first and premium users would get weekend discounts.
+12. "A loop counter ends up one higher than expected after let last = i++;. Explain." Postfix increment assigns the old value, then increments; last is the pre-increment value and i moved on. Use ++i or separate statements.
+13. "You see x = x + 1 and x += 1 and x++ in the same file. Are they equivalent?" As standalone statements, yes. x++ inside an expression differs (returns the old value). For readability pick one style; x += 1 or x++ as a statement is typical.
+
+FOLLOW-UP QUESTIONS
+Interviewer: "What is %?" Follow-up: "What is -7 % 3?" → -1; the sign follows the left operand. Follow-up: "How do you get the last digit of a number?" → n % 10.
+Interviewer: "Difference between x++ and ++x?" Follow-up: "What is i++ + ++i with i = 1?" → 4, and i ends as 3. Follow-up: "Would you write that in production?" → No; embed increments only as standalone statements.
+Interviewer: "What is the ternary operator?" Follow-up: "When would you not use it?" → For multi-step actions or more than one level of nesting; use if/else.
+
+10. INTERVIEW-FOCUSED CODING PROBLEMS
+LEVEL 1 — Easy
+P1 — Even or odd (no if) Problem: for n = 27, print 27 is odd using % and a ternary.
+TRY FIRST.
+SOLUTION
+javascript
+let n = 27;let label = n % 2 === 0 ? "even" : "odd";console.log(n + " is " + label);
+Follow-up: "Does it work for negatives?" → -3 % 2 is -1, which is not 0, so "odd": correct. Checking === 1 would fail for negatives; always compare with 0.
+P2 — Last digit and digit count hint Problem: for n = 4729, print the last digit, and the number without its last digit.
+TRY FIRST.
+SOLUTION
+javascript
+let n = 4729;
+let lastDigit = n % 10;                 // 9
+let rest = Math.floor(n / 10);          // 472console.log(lastDigit, rest);
+Explanation: this pair of operations is the engine of reverse-number and sum-of-digits on Day 7.
+P3 — Seconds to h:m:s Problem: totalSeconds = 3725 → print 1 h 2 m 5 s.
+TRY FIRST.
+SOLUTION
+javascript
+let totalSeconds = 3725;let h = Math.floor(totalSeconds / 3600);          // 1let m = Math.floor((totalSeconds % 3600) / 60);   // 2let s = totalSeconds % 60;                        // 5console.log(h + " h " + m + " m " + s + " s");
+LEVEL 2 — Intermediate
+P4 — Leap year as a boolean expression Problem: a year is a leap year if divisible by 4 but not by 100, unless also divisible by 400. For year = 1900 and year = 2000, print true/false using one boolean expression.
+TRY FIRST.
+SOLUTION
+javascript
+let year = 1900;let isLeap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;console.log(isLeap);   // false  (2000 → true, 2024 → true, 2023 → false)
+Explanation: translate the English rule directly; parentheses make the && group explicit. Follow-up: "Why are 1900 and 2000 different?" → both divisible by 100; only 2000 is divisible by 400.
+P5 — Largest of two, then three (no if) Problem: using only ternaries, find the largest of a = 14, b = 9, c = 22.
+TRY FIRST.
+SOLUTION
+javascript
+let a = 14, b = 9, c = 22;let maxAB = a > b ? a : b;          // 14let max = maxAB > c ? maxAB : c;    // 22console.log(max);
+Explanation: build the answer in two named steps instead of one nested ternary. Follow-up: "Any built-in?" → Math.max(a, b, c).
+P6 — Round-trip precedence Problem: without parentheses, predict each result; then add parentheses to make the intended result (shown in comments) without changing operators or numbers.
+javascript
+console.log(100 - 20 - 10);          // intended 90console.log(2 + 3 * 4 - 1);          // intended 19console.log(5 > 3 === true);         // intended trueconsole.log(10 / 2 * 5);             // intended 1
+TRY FIRST.
+SOLUTION Actual: 70, 13, true, 25. Intended rewrites: 100 - (20 - 10); (2 + 3) * 4 - 1; already true (comparison before ===); 10 / (2 * 5).
+LEVEL 3 — Interview-Oriented
+P7 — Trace the state Problem: fill a table of a, b, c after each line, then state the final output.
+javascript
+let a = 2, b = 3, c;c = a++ * b;b += ++a;a -= b-- % 3;console.log(a, b, c);
+TRY FIRST.
+SOLUTION
+Line	a	b	c
+start	2	3	undefined
+c = a++ * b → 2 * 3	3	3	6
+b += ++a → a becomes 4; b = 3 + 4	4	7	6
+a -= b-- % 3 → 7 % 3 = 1; a = 4 − 1; b becomes 6	3	6	6
+Output: 3 6 6. Follow-up: "Rewrite so a reader does not need a table." → separate every increment into its own statement.			
+P8 — Shipping cost rule Problem: shipping is free if the order is ≥ 999 or the customer is a member; otherwise 49, plus an extra 30 if the parcel is heavy (> 5 kg). Compute and print the shipping cost for order = 650, isMember = false, weight = 7, using booleans and ternaries only (no if).
+TRY FIRST.
+SOLUTION
+javascript
+const order = 650, isMember = false, weight = 7;const isFree = order >= 999 || isMember;const baseCost = isFree ? 0 : 49;const heavySurcharge = !isFree && weight > 5 ? 30 : 0;const shipping = baseCost + heavySurcharge;console.log("Shipping:", shipping);   // 79
+Explanation: naming each rule as a boolean mirrors how you would explain it to an interviewer. Follow-up: "Should heavy parcels be surcharged when shipping is free?" → the spec is ambiguous; state your interpretation (here: no) and make it visible in the code.
+
+11. PRACTICAL CODING EXERCISES
+Calculator lines. For a = 48, b = 7, print all six arithmetic results with labels, then Math.floor(a / b) with a comment explaining the difference from a / b.
+Compound chain. Start x = 100; apply += 50, -= 30, *= 2, /= 4, %= 7, **= 2, logging after each. Verify by hand first.
+Truth table printer. Print the four rows of && and || truth tables using console.log with literal booleans.
+Increment lab. Write six two-line snippets mixing ++/-- prefix and postfix; predict each output, then run.
+Ternary rewrites. Write three ternaries: pass/fail (≥ 40), weekend/weekday from a day number (6 or 7 → weekend), and a sign label for a number (negative / non-negative).
+
+12. HOMEWORK
+A. CONCEPT QUESTIONS
+What is the difference between / and %? Give a real use of each.
+Explain x++ vs ++x with a two-line example each.
+Why should you use === instead of ==? (One-line answer; detail tomorrow.)
+State the precedence order of !, *, +, <, ===, &&, ||, ? :, =.
+When is a ternary a good choice, and when is it a bad choice?
+B. OUTPUT QUESTIONS
+console.log(23 % 7, 7 % 23);
+
+javascript
+let k = 6;k %= 4;k **= 3;console.log(k);
+
+javascript
+let p = 9;let q = p-- - --p;console.log(p, q);
+console.log(3 > 2 > 1, 1 < 2 < 3);
+
+javascript
+let t = 15;console.log(t % 3 === 0 && t % 5 === 0 ? "FizzBuzz" : t % 3 === 0 ? "Fizz" : "Other");
+C. ERROR-FINDING
+console.log(5 % 2 = 1);
+let r = x > 10 ? "big";
+let area = 3.14 * r ^ 2; // expected area of a circle
+D. DEBUGGING
+Expected 2 h 30 m, prints 2.5 h 0 m.
+javascript
+let mins = 150;let h = mins / 60;let m = mins - h * 60;console.log(h + " h " + m + " m");
+Expected true only when the number is between 10 and 20 inclusive; prints true for 50.
+javascript
+let n = 50;console.log(10 <= n <= 20);
+E. CODING PROBLEMS
+Basic: for n = 1234, print the last digit and the number with its last digit removed.
+Intermediate: temp = 31 Celsius → print "Hot" if above 30, "Cold" if below 15, else "Pleasant", using ternaries.
+Interview-oriented: trace and give the final output, then rewrite without any embedded ++/--:
+javascript
+let a = 5, b = 2;let r = a-- + b++ * ++a;console.log(r, a, b);
+
+13. DAY-END REVISION
+□ Arithmetic + - * / % **; % = remainder; Math.floor for whole division □ Compound assignment; right side evaluated fully first □ Comparisons produce booleans; use ===/!== □ 1 < x < 10 is wrong; use && □ String comparison is character by character □ && || ! truth tables; short-circuit (boolean version) □ x++ vs ++x □ Ternary ? :, one level only □ Precedence; parentheses for clarity □ Expressions produce values; assignment is an expression
+"Can You Explain This in an Interview?"
+What is % used for? Give two examples.
+let i = 2; let j = i++ + ++i; → values of i and j?
+Why does 1 < x < 10 not work?
+When would you use a ternary, and when if?
+What is 2 ** 3 ** 2 and why?
+
+14. DAY-END ASSESSMENT
+Concept (3)
+Explain % and give its result for 25 % 7 and 7 % 25.
+Difference between x++ and ++x inside an expression.
+What is operator precedence? Why use parentheses even when not required?
+Output (3) 4. console.log(2 + 3 * 2 ** 2); 5.
+javascript
+let a = 10;let b = a++ + a;console.log(a, b);
+console.log(!(5 > 3) || 4 >= 4 && 2 > 3);
+Debugging (2) 7. Expected odd. Fix.
+javascript
+let n = 9;console.log(n % 2 = 1 ? "odd" : "even");
+Expected true for age = 30. Fix.
+javascript
+let age = 30;console.log(age > 18 && < 65);
+Coding (2) 9. totalDays = 400 → print years, remaining weeks, remaining days (1 y 5 w 0 d), using Math.floor and % (ignore leap years, year = 365). 10. Print whether n = 84 is divisible by both 3 and 4, by exactly one of them, or by neither, using booleans and a ternary chain (no if).
+Assessment answers: 4 → 14 (2 ** 2 = 4, 3 * 4 = 12, 12 + 2); 5 → 11 21 (10 + 11); 6 → false (!(5 > 3) is false; 4 >= 4 && 2 > 3 is true && false = false; false || false = false); 7 → use ===; 8 → age > 18 && age < 65; 9 → 400 − 365 = 35 → 1 y 5 w 0 d; 10 → 84 % 3 === 0 && 84 % 4 === 0 → "both".
+
+
